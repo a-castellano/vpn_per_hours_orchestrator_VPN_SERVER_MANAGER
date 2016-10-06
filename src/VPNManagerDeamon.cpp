@@ -32,20 +32,28 @@ bool legal_int(char *str)
       return false;
     }
   }
+
+  if ( atoi( *str ) < 1024 ) //port number must be greater than 1023
+  {
+    return false
+  }
   return true;
 }
 
 // Main function
 
-int main( int argc, char *argv[] ) // port number and numthreads
+// There will be only one argument, the port number.
+// In the near future there will not be arguments, the port will be the same always
+
+int main( int argc, char *argv[] )
 {
 
-  if ( argc != 3)
+  if ( argc != 2)
   {
     return 1;
   }
 
-  if ( ! legal_int( argv[1] ) || ! legal_int( argv[2] ) )
+  if ( ! legal_int( argv[1] ) ) // The port number is a valid int
   {
     return 1;
   }
