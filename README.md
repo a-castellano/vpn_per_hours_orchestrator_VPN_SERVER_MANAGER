@@ -11,7 +11,7 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 
 Install required packages uding apt-get
 
-``` 
+```
 $ apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev 
 ```
 
@@ -46,7 +46,10 @@ Build for Release
 cmake -DCMAKE_BUILD_TYPE=Release .
 ```
 ```
-$ cmake . 
+$ cmake .
 $ make
 ```
 
+## TODO
+
+This node is not going to the multi trhead. It will be an single dockerized node. The more nodes the system needs, the more docker will be deployed.
