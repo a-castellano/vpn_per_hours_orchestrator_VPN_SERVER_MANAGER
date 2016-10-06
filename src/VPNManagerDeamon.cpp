@@ -37,7 +37,7 @@ bool legal_int(char *str)
 
 // Main function
 
-int main( int argc, char *argv[] ) // port number and numthreads 
+int main( int argc, char *argv[] ) // port number and numthreads
 {
 
   if ( argc != 3)
