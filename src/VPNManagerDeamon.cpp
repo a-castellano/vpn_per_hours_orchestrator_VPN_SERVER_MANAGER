@@ -63,7 +63,6 @@ int main( int argc, char *argv[] )
 
   std::stringstream ss;
   unsigned int portnumber = atoi( argv[1] );
-  unsigned int numthreads = atoi( argv[2] );
 
   //VPNQueue *requestsQueue = new VPNQueue();
 
