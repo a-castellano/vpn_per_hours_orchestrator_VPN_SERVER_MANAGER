@@ -1,0 +1,5 @@
+[requires]
+Boost/1.60.0@lasote/stable
+libcurl/7.47.1@lasote/stable
+[generators]
+cmake
