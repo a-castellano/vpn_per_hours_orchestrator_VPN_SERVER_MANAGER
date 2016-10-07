@@ -1,5 +1,6 @@
 // ManagerMode.cpp
 // Álvaro Castellano Vela - 24/06/2016
+
 #define BOOST_SP_USE_QUICK_ALLOCATOR
 #include "ManagerNode.h"
 #include <boost/make_shared.hpp>
@@ -27,8 +28,9 @@
 #include <ServerRequest.h>
 #include <VPNLock.h>
 
-extern VPNQueue requestsQueue;
-extern std::vector<VPNQueue *> logQueues;
+extern VPNQueue processerLogQueue;
+extern VPNQueue managerQueue;
+extern VPNQueue managerLogQueue;
 extern VPNLock memoryLock;
 extern VPNLock curlLock;
 // Functions
@@ -47,7 +49,6 @@ boost::shared_ptr<std::string> VPNQueue::Dequeue() {
     usleep(2000);
     r_mutex.lock();
   }
-  // data = boost::make_shared< std::string >( *r_queue.front() );
   data = r_queue.front();
   r_queue.pop();
   r_mutex.unlock();
@@ -62,16 +63,19 @@ bool VPNQueue::empty() {
   return is_empty;
 }
 
-bool processRequests(const unsigned int port, const unsigned int numthreads) {
-  // using boost::asio::ip::tcp;
+/*
+ *
+ * processRequests
+ *
+ */
 
-  // Socket variables
+bool processRequests(const unsigned int port ) {
 
   int sockfd, newsockfd;
   socklen_t clilen;
   char buffer[256];
   struct sockaddr_in serv_addr, cli_addr;
-  int n;
+  int n;//WTF is n?
 
   // Log variables
 
@@ -92,8 +96,9 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
   logFile = boost::make_shared<std::string>(noPointerLogFile);
   memoryLock.releaseLock();
 
-  logQueues[numthreads]->Enqueue(logFile);
-  logQueues[numthreads]->Enqueue(log);
+  //There is only one processer and one manager so maybe there is no need to enqueue the logfile
+  processerLogQueue.Enqueue(logFile);
+  processerLogQueue.Enqueue(log);
   memoryLock.getLock();
   logFile.reset();
   log.reset();
@@ -135,25 +140,18 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
       bzero(buffer, 256);
       n = read(newsockfd, buffer, 255);
       close(newsockfd);
-      // std::cout << "n: " << n << std::endl;
-      // std::cout << "buffer: " << buffer << std::endl;
-      // acceptor.accept(*stream.rdbuf());
-      // ss << stream.rdbuf();
-      // stream.flush();
+
       memoryLock.getLock();
       request = boost::make_shared<std::string>(buffer);
       memoryLock.releaseLock();
-      // boost::asio::write(socket, boost::asio::buffer(message),
-      // boost::asio::transfer_all(), ignored_error);
-      // stream.close();
 
       memoryLock.getLock();
       logFile = boost::make_shared<std::string>(noPointerLogFile);
       log = boost::make_shared<std::string>(/*received +*/ *request);
       memoryLock.releaseLock();
 
-      logQueues[numthreads]->Enqueue(logFile);
-      logQueues[numthreads]->Enqueue(log);
+      processerLogQueue.Enqueue(logFile);
+      processerLogQueue.Enqueue(log);
       memoryLock.getLock();
       logFile.reset();
       log.reset();
@@ -163,11 +161,11 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
         memoryLock.getLock();
         logFile = boost::make_shared<std::string>(noPointerLogFile);
         log =
-            boost::make_shared<std::string>("Sending killing to the managers.");
+            boost::make_shared<std::string>("Sending killing message to the manager.");
         memoryLock.releaseLock();
 
-        logQueues[numthreads]->Enqueue(logFile);
-        logQueues[numthreads]->Enqueue(log);
+        processerLogQueue.Enqueue(logFile);
+        processerLogQueue.Enqueue(log);
 
         memoryLock.getLock();
         logFile.reset();
@@ -176,6 +174,7 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
         request.reset();
         memoryLock.releaseLock();
 
+        /*
         for (unsigned int t = 0; t < numthreads; t++) {
           memoryLock.getLock();
           request = boost::make_shared<std::string>(kill_yourself);
@@ -185,24 +184,24 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
           memoryLock.getLock();
           request.reset();
           memoryLock.releaseLock();
-        }
+        }*/
+
         break;
-      } else // request is not KILL_YOURSELF
-      {
-        requestsQueue.Enqueue(request);
-        request.reset();
       }
 
-      // ss.clear();// NOT USED
-      // ss.str("");
+      else // request is not KILL_YOURSELF
+      {
+        managerQueue.Enqueue(request);
+        request.reset();
+      }
 
       memoryLock.getLock();
       logFile = boost::make_shared<std::string>(noPointerLogFile);
       log = boost::make_shared<std::string>("Request enqueued.");
       memoryLock.releaseLock();
 
-      logQueues[numthreads]->Enqueue(logFile);
-      logQueues[numthreads]->Enqueue(log);
+      processerLogQueue.Enqueue(logFile);
+      processerLogQueue.Enqueue(log);
       logFile.reset();
       log.reset();
     } // for
@@ -214,8 +213,8 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
     log = boost::make_shared<std::string>(e.what());
     memoryLock.releaseLock();
 
-    logQueues[numthreads]->Enqueue(logFile);
-    logQueues[numthreads]->Enqueue(log);
+    processerLogQueue.Enqueue(logFile);
+    processerLogQueue.Enqueue(log);
     memoryLock.getLock();
     logFile.reset();
     log.reset();
@@ -228,8 +227,8 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
   log = boost::make_shared<std::string>("Proccesser finished.");
   memoryLock.releaseLock();
 
-  logQueues[numthreads]->Enqueue(logFile);
-  logQueues[numthreads]->Enqueue(log);
+  processerLogQueue.Enqueue(logFile);
+  processerLogQueue.Enqueue(log);
   memoryLock.getLock();
   logFile.reset();
   log.reset();
@@ -241,19 +240,11 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
   logFile = boost::make_shared<std::string>(kill_yourself);
   memoryLock.releaseLock();
 
-  logQueues[numthreads]->Enqueue(logFile);
+  processerLogQueue.Enqueue(logFile);
   memoryLock.getLock();
   logFile.reset();
   memoryLock.releaseLock();
 
-  /*
-    stream.flush();
-    stream.close();
-    socket.close();
-    io_service.stop();
-    acceptor.close();
-  */
-  // close(newsockfd);
   close(sockfd);
 
   noPointerLogFile.clear();
@@ -262,13 +253,22 @@ bool processRequests(const unsigned int port, const unsigned int numthreads) {
   return true;
 }
 
-void requestManager(const unsigned int thread_id) {
+
+/*
+ *
+ *  requestManager
+ *
+ */
+
+void requestManager() {
 
   boost::shared_ptr<std::string> request;
 
   boost::shared_ptr<std::string> command;
   boost::shared_ptr<std::string> token;
 
+
+  //This wont be here in next version
   std::string address("paula.es.una.ninja");
   std::string user("vpn");
   std::string password("XLRc3H1y4Db0G4qR630Qk2xPF3D88P");
@@ -291,11 +291,8 @@ void requestManager(const unsigned int thread_id) {
   std::string incorrect("The request is not correct");
   std::string errordb("Error on database connection");
 
-  std::string noPointerLogFile =
-      std::string("Manager_") + std::to_string(thread_id) + std::string(".log");
-  std::string noPointerStarted = std::string("Manager ") +
-                                 std::to_string(thread_id) +
-                                 std::string(" started.");
+  std::string noPointerLogFile = std::string("Manager.log");
+  std::string noPointerStarted = std::string("Manager started.");
 
   boost::shared_ptr<ServerRequest> serverRequest;
   boost::shared_ptr<Server> server;
@@ -308,8 +305,8 @@ void requestManager(const unsigned int thread_id) {
   logFile = boost::make_shared<std::string>(noPointerLogFile);
   log = boost::make_shared<std::string>(noPointerStarted);
   memoryLock.releaseLock();
-  logQueues[thread_id]->Enqueue(logFile);
-  logQueues[thread_id]->Enqueue(log);
+  managerLogQueue.Enqueue(logFile);
+  managerLogQueue.Enqueue(log);
   memoryLock.getLock();
   logFile.reset();
   log.reset();
@@ -318,15 +315,15 @@ void requestManager(const unsigned int thread_id) {
   for (;;) // I will be here forever
   {
     request.reset();
-    request = requestsQueue.Dequeue();
+    request = managerQueue.Dequeue();
 
     memoryLock.getLock();
     logFile = boost::make_shared<std::string>(noPointerLogFile);
     log = boost::make_shared<std::string>(/*received +*/ *request);
     memoryLock.releaseLock();
 
-    logQueues[thread_id]->Enqueue(logFile);
-    logQueues[thread_id]->Enqueue(log);
+    managerLogQueue.Enqueue(logFile);
+    managerLogQueue.Enqueue(log);
     memoryLock.getLock();
     logFile.reset();
     log.reset();
@@ -338,8 +335,8 @@ void requestManager(const unsigned int thread_id) {
       log = boost::make_shared<std::string>("Kill message received... R.I.P.");
       memoryLock.releaseLock();
 
-      logQueues[thread_id]->Enqueue(logFile);
-      logQueues[thread_id]->Enqueue(log);
+      managerLogQueue.Enqueue(logFile);
+      managerLogQueue.Enqueue(log);
 
       memoryLock.getLock();
       logFile.reset();
@@ -349,7 +346,7 @@ void requestManager(const unsigned int thread_id) {
       memoryLock.getLock();
       logFile = boost::make_shared<std::string>(kill_yourself);
       memoryLock.releaseLock();
-      logQueues[thread_id]->Enqueue(logFile);
+      managerLogQueue.Enqueue(logFile);
 
       memoryLock.getLock();
       logFile.reset();
@@ -367,8 +364,8 @@ void requestManager(const unsigned int thread_id) {
       log = boost::make_shared<std::string>(correct);
       memoryLock.releaseLock();
 
-      logQueues[thread_id]->Enqueue(logFile);
-      logQueues[thread_id]->Enqueue(log);
+      managerLogQueue.Enqueue(logFile);
+      managerLogQueue.Enqueue(log);
 
       memoryLock.getLock();
       logFile.reset();
@@ -382,8 +379,8 @@ void requestManager(const unsigned int thread_id) {
       log = boost::make_shared<std::string>(*command);
       memoryLock.releaseLock();
 
-      logQueues[thread_id]->Enqueue(logFile);
-      logQueues[thread_id]->Enqueue(log);
+      managerLogQueue.Enqueue(logFile);
+      managerLogQueue.Enqueue(log);
 
       memoryLock.getLock();
       logFile.reset();
@@ -401,8 +398,8 @@ void requestManager(const unsigned int thread_id) {
         log = boost::make_shared<std::string>(errordb);
         memoryLock.releaseLock();
 
-        logQueues[thread_id]->Enqueue(logFile);
-        logQueues[thread_id]->Enqueue(log);
+        managerLogQueue.Enqueue(logFile);
+        managerLogQueue.Enqueue(log);
 
         memoryLock.getLock();
         logFile.reset();
@@ -425,8 +422,8 @@ void requestManager(const unsigned int thread_id) {
         log = boost::make_shared<std::string>(*severName);
         memoryLock.releaseLock();
 
-        logQueues[thread_id]->Enqueue(logFile);
-        logQueues[thread_id]->Enqueue(log);
+        managerLogQueue.Enqueue(logFile);
+        managerLogQueue.Enqueue(log);
 
         memoryLock.getLock();
         logFile.reset();
@@ -445,8 +442,8 @@ void requestManager(const unsigned int thread_id) {
       log = boost::make_shared<std::string>(incorrect);
       memoryLock.releaseLock();
 
-      logQueues[thread_id]->Enqueue(logFile);
-      logQueues[thread_id]->Enqueue(log);
+      managerLogQueue.Enqueue(logFile);
+      managerLogQueue.Enqueue(log);
 
       memoryLock.getLock();
       logFile.reset();
@@ -569,8 +566,8 @@ void requestManager(const unsigned int thread_id) {
     log = boost::make_shared<std::string>(processed);
     memoryLock.releaseLock();
 
-    logQueues[thread_id]->Enqueue(logFile);
-    logQueues[thread_id]->Enqueue(log);
+    managerLogQueue.Enqueue(logFile);
+    managerLogQueue.Enqueue(log);
     memoryLock.getLock();
     logFile.reset();
     log.reset();
@@ -581,34 +578,38 @@ void requestManager(const unsigned int thread_id) {
 }
 
 void logManager(const std::string &logFolder) {
+
+  //Next iteration -> logManager will recive ManagerPath and PorcesserPath
+
   boost::shared_ptr<std::string> logFile;
   boost::shared_ptr<std::string> logPath;
   boost::shared_ptr<std::string> log;
   std::string kill_yourself("__KILL_YOURSELF__");
 
   unsigned int killed_queues = 0;
-  unsigned int queue_size = logQueues.size();
 
-  while (killed_queues != queue_size) // size = n trhead managers + one producer
+  while ( killed_queues != 2 ) // There are only 2 queues
   {
-    for (unsigned int i = 0; i < logQueues.size(); i++) {
-      if (!logQueues[i]->empty()) {
-        logFile = logQueues[i]->Dequeue();
-        if (*logFile != kill_yourself) {
-          memoryLock.getLock();
-          logPath = boost::make_shared<std::string>(logFolder + *logFile);
-          memoryLock.releaseLock();
-          log = logQueues[i]->Dequeue();
-          writeLog(logPath, log);
+    if ( !processerLogQueue.empty() )
+    {
+      logFile = processerLogQueue.Dequeue();
+      if (*logFile != kill_yourself)
+      {
+        memoryLock.getLock();
+        logPath = boost::make_shared<std::string>(logFolder + *logFile);
+        memoryLock.releaseLock();
+        log = processerLogQueue.Dequeue();
+        writeLog(logPath, log);
 
-          memoryLock.getLock();
-          logFile.reset();
-          log.reset();
-          logPath.reset();
-          memoryLock.releaseLock();
-        } else {
-          killed_queues++;
-        }
+        memoryLock.getLock();
+        logFile.reset();
+        log.reset();
+        logPath.reset();
+        memoryLock.releaseLock();
+      }
+      else
+      {
+        killed_queues++;
       }
     }
     usleep(100000);

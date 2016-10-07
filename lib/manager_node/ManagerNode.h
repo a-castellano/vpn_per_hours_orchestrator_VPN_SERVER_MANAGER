@@ -26,15 +26,15 @@ class VPNQueue
 
 
 
-bool processRequests(const unsigned int , const unsigned int);
-/* "processRequests" function opens one socket for receiving 
+bool processRequests( const unsigned int );
+/* "processRequests" function opens one socket for receiving
  * server requests from the distributor, when a request is received
  * it is validated and enqueued.
  *
  * If the received request is "__KILL_YOURSELF__" the manager will send the same message
  * to all the requestsManagers wich will commit suicide
 */
-void requestManager( const unsigned int );
+void requestManager();
 
 void logManager( const std::string & );
 

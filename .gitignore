@@ -7,3 +7,4 @@ Makefile
 bin
 cmake_install.cmake
 tags
+*.swp

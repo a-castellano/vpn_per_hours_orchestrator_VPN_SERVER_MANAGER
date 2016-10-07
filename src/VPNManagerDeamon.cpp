@@ -17,8 +17,6 @@ using namespace std;
 
 // Global variables
 
-VPNQueue requestsQueue;
-vector<VPNQueue*> logQueues;
 VPNLock curlLock;
 VPNLock memoryLock;
 // Support Functions
@@ -33,10 +31,6 @@ bool legal_int(char *str)
     }
   }
 
-  if ( atoi( *str ) < 1024 ) //port number must be greater than 1023
-  {
-    return false
-  }
   return true;
 }
 
@@ -47,56 +41,56 @@ bool legal_int(char *str)
 
 int main( int argc, char *argv[] )
 {
-
   if ( argc != 2)
   {
     return 1;
   }
-
   if ( ! legal_int( argv[1] ) ) // The port number is a valid int
   {
     return 1;
   }
+  /*There are two threads
+   * Manager: the manager read will be reading request untile the request "__KILL_YOURSELF__" arrives
+   * Logger: the logger writes what is happeing in a log file
+   */
 
   boost::thread manager;
+  boost::thread request_manager;
   boost::thread logger;
 
+  // The queue used by processer thread to write its logs
+  VPNQueue processerLogQueue;
+
+  // The queue used by porcesser for sending messages to manager thread
+  VPNQueue managerQueue;
+
+  // The queue user by manager thread to write its logs
+  VPNQueue managerLogQueue;
+
+
+  // The path where logs will be written
+  string logFolder= string("log/Manager/"); 
+
   std::stringstream ss;
-  unsigned int portnumber = atoi( argv[1] );
+  unsigned int portnumber = atoi( argv[1] ); //TODO -> DELETE PORTNUMBER
 
-  //VPNQueue *requestsQueue = new VPNQueue();
+  //boost::shared_ptr< std::string > killMsg;
 
-  VPNQueue *logQueue;// = new VPNQueue();
-  //vector<VPNQueue *> logQueues;
-  //logQueues.resize(numthreads+1);
+  //for( unsigned int i = 0; i < numthreads ; i++ )
+  //{
+  //  logQueue = new VPNQueue();
+  //  threads.add_thread( new boost::thread( requestManager, i ) );
+  //  logQueues.push_back( logQueue );
+  //}
 
-  boost::thread_group threads;
-
-  string logFolder= string("log/Manager_")+to_string(portnumber)+string("/");
-
-  boost::shared_ptr< std::string > killMsg;
-
-  for( unsigned int i = 0; i < numthreads ; i++ )
-  {
-    logQueue = new VPNQueue();
-    threads.add_thread( new boost::thread( requestManager, i ) );
-    logQueues.push_back( logQueue );
-  }
-
-  logQueue = new VPNQueue();
-  manager = boost::thread( processRequests, portnumber, numthreads );
-  logQueues.push_back( logQueue );
-
+  manager = boost::thread( processRequests, portnumber );
+  request_manager = boost::thread( requestManager );
   logger = boost::thread( logManager, logFolder);
 
   cout << "Port Number: " << portnumber << endl;
-  cout << "Number of threads: " << numthreads << endl;
   manager.join();
-  threads.join_all();
 
-  killMsg = boost::shared_ptr< std::string >( new std::string( "__KILL_YOURSELF__" ) );
-  logQueues[numthreads]->Enqueue(killMsg);
-  killMsg.reset();
+//  killMsg = boost::shared_ptr< std::string >( new std::string( "__KILL_YOURSELF__" ) );
 
   logger.join();
 
