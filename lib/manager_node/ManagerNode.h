@@ -36,6 +36,6 @@ bool processRequests( const unsigned int );
 */
 void requestManager();
 
-void logManager( const std::string & );
+void logManager();
 
-bool writeLog( boost::shared_ptr< std::string >, boost::shared_ptr< std::string > );
+bool writeLog( std::string &, boost::shared_ptr< std::string > );

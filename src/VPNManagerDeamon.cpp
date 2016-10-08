@@ -19,6 +19,17 @@ using namespace std;
 
 VPNLock curlLock;
 VPNLock memoryLock;
+
+// The queue used by processer thread to write its logs
+VPNQueue processerLogQueue;
+
+// The queue used by porcesser for sending messages to manager thread
+VPNQueue managerQueue;
+
+// The queue user by manager thread to write its logs
+VPNQueue managerLogQueue;
+
+
 // Support Functions
 
 bool legal_int(char *str)
@@ -58,16 +69,6 @@ int main( int argc, char *argv[] )
   boost::thread request_manager;
   boost::thread logger;
 
-  // The queue used by processer thread to write its logs
-  VPNQueue processerLogQueue;
-
-  // The queue used by porcesser for sending messages to manager thread
-  VPNQueue managerQueue;
-
-  // The queue user by manager thread to write its logs
-  VPNQueue managerLogQueue;
-
-
   // The path where logs will be written
   string logFolder= string("log/Manager/"); 
 
@@ -85,7 +86,7 @@ int main( int argc, char *argv[] )
 
   manager = boost::thread( processRequests, portnumber );
   request_manager = boost::thread( requestManager );
-  logger = boost::thread( logManager, logFolder);
+  logger = boost::thread( logManager );
 
   cout << "Port Number: " << portnumber << endl;
   manager.join();
