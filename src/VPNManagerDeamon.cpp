@@ -85,12 +85,12 @@ int main( int argc, char *argv[] )
   //}
 
   manager = boost::thread( processRequests, portnumber );
-  //request_manager = boost::thread( requestManager );
+  request_manager = boost::thread( requestManager );
   logger = boost::thread( logManager );
 
   cout << "Port Number: " << portnumber << endl;
   manager.join();
-  //request_manager.join();
+  request_manager.join();
 
 //  killMsg = boost::shared_ptr< std::string >( new std::string( "__KILL_YOURSELF__" ) );
 

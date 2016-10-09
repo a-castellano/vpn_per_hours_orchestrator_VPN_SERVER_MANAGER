@@ -38,4 +38,4 @@ void requestManager();
 
 void logManager();
 
-bool writeLog( std::string &, boost::shared_ptr< std::string > );
+bool writeLog( std::string , boost::shared_ptr< std::string > );

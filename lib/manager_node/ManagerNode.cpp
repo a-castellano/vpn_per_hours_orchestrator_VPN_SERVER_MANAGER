@@ -93,20 +93,12 @@ bool processRequests(const unsigned int port ) {
   log = boost::make_shared<std::string>("Proccesser started!");
   processerLogQueue.Enqueue(log);
   memoryLock.releaseLock();
-return true;
+
   //There is only one processer and one manager so maybe there is no need to enqueue the logfile
   memoryLock.getLock();
   log.reset();
   memoryLock.releaseLock();
 
-  memoryLock.getLock();
-  log = boost::make_shared<std::string>("Proccesser YO started!");
-  processerLogQueue.Enqueue(log);
-  memoryLock.releaseLock();
-
-  memoryLock.getLock();
-  log.reset();
-  memoryLock.releaseLock();
   // Creating socket
 
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -510,7 +502,6 @@ void requestManager() {
     */
     usleep((rand() % 10 + 1) * 10000);
 
-    free(db);
     memoryLock.getLock();
     log = boost::make_shared<std::string>(processed);
     memoryLock.releaseLock();
@@ -542,7 +533,7 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself)
       {
-        //writeLog( logFileProcesser, log);
+        writeLog( logFileProcesser, log);
 
         memoryLock.getLock();
         log.reset();
@@ -575,7 +566,7 @@ void logManager() {
   }
 }
 
-bool writeLog(std::string &path,
+bool writeLog(std::string path,
               boost::shared_ptr<std::string> data) {
 
   time_t *t;
@@ -591,7 +582,7 @@ bool writeLog(std::string &path,
   std::ofstream outfile;
 
   memoryLock.getLock();
-  outfile.open( path, std::ios_base::app);
+  outfile.open( path.c_str(), std::ios_base::app);
   outfile << "[";
   outfile << (now->tm_year + 1900) << '/';
   if (now->tm_mon < 9)
@@ -617,8 +608,7 @@ bool writeLog(std::string &path,
   outfile << "\n";
 
   outfile.close();
-  free(t);
-  //data.reset();
+  delete(t);
   memoryLock.releaseLock();
   return true;
 }
