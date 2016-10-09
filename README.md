@@ -50,6 +50,11 @@ $ cmake .
 $ make
 ```
 
+Finding memory leaks using valgind
+```
+ valgrind --tool=memcheck --leak-check=full  ./bin/VPNManagerDaemon PORT_NUMBER
+```
+
 ## TODO
 
 This node is not going to the multi trhead. It will be an single dockerized node. The more nodes the system needs, the more docker will be deployed.
