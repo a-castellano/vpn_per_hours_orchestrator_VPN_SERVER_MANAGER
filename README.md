@@ -9,10 +9,10 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 
 ### Ubuntu
 
-Install required packages uding apt-get
+Install required packages using apt-get
 
 ```
-# apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev 
+# apt-get install git ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev 
 ```
 
 Installing required packages using pip
@@ -22,10 +22,10 @@ Installing required packages using pip
 ```
 
 ### Debian 8
-Install required packages uding apt-get
+Install required packages using apt-get
 
 ```
-# apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+# apt-get install git ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
 ```
 
 Installing required packages using pip
@@ -46,9 +46,22 @@ Using conan we need to specify which compiler is going to be used its version, a
 ```
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
-$ conan install -s compiler=gcc -s compiler.version=5.3 -s compiler.libcxx=libstdc++11 .
+$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11 .
 $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl .
 ```
+
+#### Debian 8
+
+Using conan we need to specify which compiler is going to be used its version, also we need to specify that we are going tu use  **libstdc++11** as linker.
+```
+$ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
+$ git checkout {{CURRENT_BRANCH}}
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11 .
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl .
+```
+
+### Build
+
 Build for Debug
 ```
 cmake -DCMAKE_BUILD_TYPE=Debug .
