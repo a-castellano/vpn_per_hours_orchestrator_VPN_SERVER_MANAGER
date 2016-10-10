@@ -162,21 +162,23 @@ std::string DatabaseHandler::getErrorMsg( void )
 unsigned int  DatabaseHandler::getServerZoneFromToken( const std::string & token )
 {
 	std::stringstream query;
-	query << "SELECT zone FROM servers WHERE token='" << token << "' LIMIT 1";
+  unsigned int zone;
+  query << "SELECT zone FROM servers WHERE token='" << token << "' LIMIT 1";
 	connect();
 	if ( connected )
 	{
 		this->res = stmt->executeQuery( query.str() );
 		if (this->res->next())
 		{
-			return std::stoi( this->res->getString("zone") );
+			zone = std::stoi( this->res->getString("zone") );
+      this->res->next();
 		}
 		else
 		{
 			disconnect();
 			error = true;
 			errormsg = std::string("Query response is empty.");
-			return 0;
+			zone = 0;
 		}
 	}
 	else
@@ -185,10 +187,10 @@ unsigned int  DatabaseHandler::getServerZoneFromToken( const std::string & token
 		error = true;
 		errormsg = std::string("Failed to conenct."); 
 	}
-	std::cout << "Voy a desconectarme"<<std::endl;
+
 	disconnect();
-	std::cout << "Deberia estar desconectado"<<std::endl;
-	return 0;
+
+	return zone;
 }
 
 std::vector<std::string> DatabaseHandler::getProvidersFromZone( const unsigned int & zone_id )
