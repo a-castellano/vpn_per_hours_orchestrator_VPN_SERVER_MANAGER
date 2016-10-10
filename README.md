@@ -47,7 +47,7 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl .
+$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
 ```
 
 #### Debian 8
@@ -57,7 +57,7 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl .
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
 ```
 
 ### Build
