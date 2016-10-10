@@ -1,7 +1,7 @@
 // ManagerMode.cpp
 // Álvaro Castellano Vela - 24/06/2016
 
-#define BOOST_SP_USE_QUICK_ALLOCATOR
+//#define BOOST_SP_USE_QUICK_ALLOCATOR
 #include "ManagerNode.h"
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -562,7 +562,7 @@ void logManager() {
         killed_queues++;
       }
     }
-    usleep(100000);
+    usleep(10000);
   }
 }
 

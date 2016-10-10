@@ -1,7 +1,7 @@
 // VPNManagerDeamon.cpp
 // Álvaro Castellano Vela - 24/06/2016
 
-#define BOOST_SP_USE_QUICK_ALLOCATOR
+//#define BOOST_SP_USE_QUICK_ALLOCATOR
 #include <iostream>
 #include <string>
 #include <vector>
