@@ -12,15 +12,27 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 Install required packages uding apt-get
 
 ```
-$ apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev 
+# apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev 
 ```
 
 Installing required packages using pip
 
 ```
-$ pip install conan
+# pip install conan
 ```
 
+### Debian 8
+Install required packages uding apt-get
+
+```
+# apt-get install ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+```
+
+Installing required packages using pip
+
+```
+# pip install conan
+```
 ## Project settings
 
 ## Building the project
