@@ -562,7 +562,7 @@ void logManager() {
         killed_queues++;
       }
     }
-    usleep(10000);
+    usleep(1000);
   }
 }
 

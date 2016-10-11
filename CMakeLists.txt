@@ -1,8 +1,9 @@
 project(HTTP_test)
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -fsanitize=address -g")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall --std=c++11 -fsanitize=address")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 include(conanbuildinfo.cmake)
 CONAN_BASIC_SETUP()
@@ -20,7 +21,7 @@ INCLUDE_DIRECTORIES(lib/server)
 INCLUDE_DIRECTORIES(lib/server_pointer)
 INCLUDE_DIRECTORIES(lib/ssh_tester)
 INCLUDE_DIRECTORIES(lib/vpn_lock)
-INCLUDE_DIRECTORIES(lib/manager_node) 
+INCLUDE_DIRECTORIES(lib/manager_node)
 
 
 ADD_EXECUTABLE( main src/test.cpp lib/server_request/ServerRequest.cpp lib/vpn_lock/VPNLock.cpp )
