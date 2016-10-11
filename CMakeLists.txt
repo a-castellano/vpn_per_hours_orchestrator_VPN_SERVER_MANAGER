@@ -1,9 +1,8 @@
 project(HTTP_test)
 cmake_minimum_required(VERSION 3.0)
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall --std=c++11 -fsanitize=address")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wunused-variable -Wreturn-type --std=c++11 -fsanitize=address")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -Wunused-variable -Wreturn-type --std=c++11")
 
 include(conanbuildinfo.cmake)
 CONAN_BASIC_SETUP()
