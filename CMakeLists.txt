@@ -1,8 +1,8 @@
 project(HTTP_test)
 cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -g")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -fsanitize=address -g") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -fsanitize=address -g")
 
 include(conanbuildinfo.cmake)
 CONAN_BASIC_SETUP()
