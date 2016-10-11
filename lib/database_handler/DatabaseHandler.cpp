@@ -185,7 +185,8 @@ unsigned int  DatabaseHandler::getServerZoneFromToken( const std::string & token
 	{
 		std::cerr << "Failed to conenct" << std::endl;
 		error = true;
-		errormsg = std::string("Failed to conenct."); 
+		errormsg = std::string("Failed to conenct.");
+    zone = 0;
 	}
 
 	disconnect();

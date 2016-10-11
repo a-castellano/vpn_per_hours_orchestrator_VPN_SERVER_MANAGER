@@ -70,7 +70,7 @@ int main( int argc, char *argv[] )
   boost::thread logger;
 
   // The path where logs will be written
-  string logFolder= string("log/Manager/"); 
+  string logFolder= string("log/Manager/");
 
   std::stringstream ss;
   unsigned int portnumber = atoi( argv[1] ); //TODO -> DELETE PORTNUMBER
