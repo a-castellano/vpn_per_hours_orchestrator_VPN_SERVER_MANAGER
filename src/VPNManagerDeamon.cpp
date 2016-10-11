@@ -1,7 +1,7 @@
 // VPNManagerDeamon.cpp
 // Álvaro Castellano Vela - 24/06/2016
 
-//#define BOOST_SP_USE_QUICK_ALLOCATOR
+#define BOOST_SP_USE_QUICK_ALLOCATOR
 #include <iostream>
 #include <string>
 #include <vector>
@@ -86,7 +86,7 @@ int main( int argc, char *argv[] )
 
   manager = boost::thread( processRequests, portnumber );
   request_manager = boost::thread( requestManager );
-  logger = boost::thread( logManager );
+//  logger = boost::thread( logManager );
 
   cout << "Port Number: " << portnumber << endl;
   manager.join();
@@ -94,7 +94,7 @@ int main( int argc, char *argv[] )
 
 //  killMsg = boost::shared_ptr< std::string >( new std::string( "__KILL_YOURSELF__" ) );
 
-  logger.join();
+//  logger.join();
 
   //for( unsigned int i = 0; i < logQueues.size() ; i++ )
   //{

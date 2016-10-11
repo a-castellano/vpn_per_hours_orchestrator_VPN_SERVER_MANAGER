@@ -1,6 +1,7 @@
 // serverRequest.h
 // Álvaro Castellano Vela 23/02/2016
 
+#define BOOST_SP_USE_QUICK_ALLOCATOR 
 #include "ServerRequest.h"
 #include <string>
 #include <vector>

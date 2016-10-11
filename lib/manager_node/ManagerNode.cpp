@@ -1,7 +1,7 @@
 // ManagerMode.cpp
 // Álvaro Castellano Vela - 24/06/2016
 
-//#define BOOST_SP_USE_QUICK_ALLOCATOR
+#define BOOST_SP_USE_QUICK_ALLOCATOR
 #include "ManagerNode.h"
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
@@ -35,7 +35,7 @@ extern VPNLock memoryLock;
 extern VPNLock curlLock;
 // Functions
 
-void VPNQueue::Enqueue(boost::shared_ptr<std::string> request) {
+void VPNQueue::Enqueue(const boost::shared_ptr<std::string> & request) {
   r_mutex.lock();
   r_queue.push(request);
   r_mutex.unlock();
@@ -533,7 +533,9 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself)
       {
-        writeLog( logFileProcesser, log);
+        memoryLock.getLock();
+        //writeLog( logFileProcesser, log);
+        memoryLock.releaseLock();
 
         memoryLock.getLock();
         log.reset();
@@ -551,7 +553,9 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself)
       {
-         writeLog( logFileManager, log);
+         memoryLock.getLock();
+         //writeLog( logFileManager, log);
+         memoryLock.releaseLock();
 
          memoryLock.getLock();
          log.reset();
@@ -566,22 +570,22 @@ void logManager() {
   }
 }
 
-bool writeLog(std::string path,
+bool writeLog(const std::string path,
               boost::shared_ptr<std::string> data) {
 
   time_t *t;
   struct tm *now;
 
-  memoryLock.getLock();
+  //memoryLock.getLock();
   t = new time_t(std::time(0));
   now = std::localtime(t);
 
   //boost:i:shared_ptr<std::string> log(data);
-  memoryLock.releaseLock();
+  //memoryLock.releaseLock();
 
   std::ofstream outfile;
 
-  memoryLock.getLock();
+  //memoryLock.getLock();
   outfile.open( path.c_str(), std::ios_base::app);
   outfile << "[";
   outfile << (now->tm_year + 1900) << '/';
@@ -609,6 +613,6 @@ bool writeLog(std::string path,
 
   outfile.close();
   delete(t);
-  memoryLock.releaseLock();
+  //memoryLock.releaseLock();
   return true;
 }

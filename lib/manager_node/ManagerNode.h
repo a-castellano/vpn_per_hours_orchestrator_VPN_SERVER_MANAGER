@@ -14,7 +14,7 @@
 class VPNQueue
 {
   public:
-    void Enqueue( boost::shared_ptr< std::string > );
+    void Enqueue( const boost::shared_ptr< std::string > & );
     boost::shared_ptr< std::string > Dequeue( );
     bool empty();
 
@@ -38,4 +38,4 @@ void requestManager();
 
 void logManager();
 
-bool writeLog( std::string , boost::shared_ptr< std::string > );
+bool writeLog( const std::string , boost::shared_ptr< std::string > );
