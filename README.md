@@ -50,6 +50,12 @@ $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libst
 $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
 ```
 
+
+Using Clang
+```
+$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
+```
+
 #### Debian 8
 
 Using conan we need to specify which compiler is going to be used its version, also we need to specify that we are going tu use  **libstdc++11** as linker.
