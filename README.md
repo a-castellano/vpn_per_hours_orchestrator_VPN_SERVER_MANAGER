@@ -93,9 +93,13 @@ During a test it throwed this error:
 ElectricFence Exiting: mprotect() failed: Cannot allocate memory
 ```
 
-This is happening because the project is not liberating memory.... 
+This happened because the the logger was not running and memory didn't get liberated.
 
-ElectricFence Exiting: mprotect() failed: Cannot allocate memory
+Only for testing
+```
+echo 128000 > /proc/sys/vm/max_map_count
+```
+
 ## TODO
 
 This node is not going to the multi trhead. It will be an single dockerized node. The more nodes the system needs, the more docker will be deployed.
