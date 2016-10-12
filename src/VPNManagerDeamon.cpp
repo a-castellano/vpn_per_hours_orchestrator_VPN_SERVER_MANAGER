@@ -17,7 +17,9 @@ using namespace std;
 
 // Global variables
 
-VPNLock curlLock;
+VPNLock curlLock;//Delete this ASAP
+
+//Lock to prevent data reaces
 VPNLock memoryLock;
 
 // The queue used by processer thread to write its logs
@@ -48,7 +50,6 @@ bool legal_int(char *str)
 // Main function
 
 // There will be only one argument, the port number.
-// In the near future there will not be arguments, the port will be the same always
 
 int main( int argc, char *argv[] )
 {
@@ -56,55 +57,36 @@ int main( int argc, char *argv[] )
   {
     return 1;
   }
-  if ( ! legal_int( argv[1] ) ) // The port number is a valid int
+  if ( ! legal_int( argv[1] ) )
   {
     return 1;
   }
-  /*There are two threads
-   * Manager: the manager read will be reading request untile the request "__KILL_YOURSELF__" arrives
-   * Logger: the logger writes what is happeing in a log file
+  /*There are three threads
+   * Manager:    the manager read will be reading request untile the request "__KILL_YOURSELF__" arrives
+   *             Manager also send the request to the processer thread
+   * Processer:  This is the thread which handles the requests
+   * Logger:     the logger writes what is happeing in a log file
    */
 
+  boost::thread processer;
   boost::thread manager;
-  boost::thread request_manager;
   boost::thread logger;
 
   // The path where logs will be written
   string logFolder= string("log/Manager/");
 
   std::stringstream ss;
-  unsigned int portnumber = atoi( argv[1] ); //TODO -> DELETE PORTNUMBER
+  unsigned int portnumber = atoi( argv[1] );
 
-  //boost::shared_ptr< std::string > killMsg;
-
-  //for( unsigned int i = 0; i < numthreads ; i++ )
-  //{
-  //  logQueue = new VPNQueue();
-  //  threads.add_thread( new boost::thread( requestManager, i ) );
-  //  logQueues.push_back( logQueue );
-  //}
-
-  manager = boost::thread( processRequests, portnumber );
-  request_manager = boost::thread( requestManager );
-//  logger = boost::thread( logManager );
+  processer = boost::thread( processRequests, portnumber );
+  manager = boost::thread( requestManager );
+  //logger = boost::thread( logManager );
 
   cout << "Port Number: " << portnumber << endl;
+
+  processer.join();
   manager.join();
-  request_manager.join();
-
-//  killMsg = boost::shared_ptr< std::string >( new std::string( "__KILL_YOURSELF__" ) );
-
-//  logger.join();
-
-  //for( unsigned int i = 0; i < logQueues.size() ; i++ )
-  //{
-  //  logQueue = logQueues[i];
-  //  free( logQueue );
-  //}
-
-  //free(curlLock);
-  //free(requestLock);
-  //free(memoryLock);
+  //logger.join();
 
   cout << "End" << endl;
 
