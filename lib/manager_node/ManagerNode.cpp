@@ -35,7 +35,7 @@ extern VPNLock memoryLock;
 extern VPNLock curlLock;
 // Functions
 
-void VPNQueue::Enqueue(const boost::shared_ptr<std::string> & request) {
+void VPNQueue::Enqueue(const boost::shared_ptr<std::string> &request) {
   r_mutex.lock();
   r_queue.push(request);
   r_mutex.unlock();
@@ -69,13 +69,13 @@ bool VPNQueue::empty() {
  *
  */
 
-bool processRequests(const unsigned int port ) {
+bool processRequests(const unsigned int port) {
 
   int sockfd, newsockfd;
   socklen_t clilen;
   char buffer[256];
   struct sockaddr_in serv_addr, cli_addr;
-  int n;//WTF is n?
+  int n; // WTF is n?
 
   // Log variables
 
@@ -94,7 +94,8 @@ bool processRequests(const unsigned int port ) {
   processerLogQueue.Enqueue(log);
   memoryLock.releaseLock();
 
-  //There is only one processer and one manager so maybe there is no need to enqueue the logfile
+  // There is only one processer and one manager so maybe there is no need to
+  // enqueue the logfile
   memoryLock.getLock();
   log.reset();
   memoryLock.releaseLock();
@@ -151,8 +152,8 @@ bool processRequests(const unsigned int port ) {
 
       if (*request == kill_yourself) {
         memoryLock.getLock();
-        log =
-            boost::make_shared<std::string>("Sending killing message to the manager.");
+        log = boost::make_shared<std::string>(
+            "Sending killing message to the manager.");
         memoryLock.releaseLock();
 
         processerLogQueue.Enqueue(log);
@@ -163,15 +164,15 @@ bool processRequests(const unsigned int port ) {
         request.reset();
         memoryLock.releaseLock();
 
-        //for (unsigned int t = 0; t < numthreads; t++) {
-          memoryLock.getLock();
-          request = boost::make_shared<std::string>(kill_yourself);
-          memoryLock.releaseLock();
+        // for (unsigned int t = 0; t < numthreads; t++) {
+        memoryLock.getLock();
+        request = boost::make_shared<std::string>(kill_yourself);
+        memoryLock.releaseLock();
 
-          managerQueue.Enqueue(request);
-          memoryLock.getLock();
-          request.reset();
-          memoryLock.releaseLock();
+        managerQueue.Enqueue(request);
+        memoryLock.getLock();
+        request.reset();
+        memoryLock.releaseLock();
         //}
 
         break;
@@ -228,7 +229,6 @@ bool processRequests(const unsigned int port ) {
   return true;
 }
 
-
 /*
  *
  *  requestManager
@@ -242,15 +242,14 @@ void requestManager() {
   boost::shared_ptr<std::string> command;
   boost::shared_ptr<std::string> token;
 
-
-  //This wont be here in next version
+  // This wont be here in next version
   std::string address("paula.es.una.ninja");
   std::string user("vpn");
   std::string password("XLRc3H1y4Db0G4qR630Qk2xPF3D88P");
   std::string database("vpn");
 
-  DatabaseHandler * db;
-  DatabaseHandler * db_zones;
+  DatabaseHandler *db;
+  DatabaseHandler *db_zones;
 
   unsigned int zone;
   std::vector<std::string> providers;
@@ -338,8 +337,7 @@ void requestManager() {
       memoryLock.releaseLock();
 
       memoryLock.getLock();
-      db = new DatabaseHandler(address, 3306, user, password,
-                                               database);
+      db = new DatabaseHandler(address, 3306, user, password, database);
       memoryLock.releaseLock();
 
       if (!db->dataIsWellFormed()) {
@@ -354,14 +352,15 @@ void requestManager() {
         memoryLock.releaseLock();
 
         memoryLock.getLock();
-        delete(db);
+        delete (db);
         memoryLock.releaseLock();
       }
 
       else {
         memoryLock.getLock();
         zone = db->getServerZoneFromToken(*token);
-        severName = boost::make_shared<std::string>(db->setServerName(*token, zone));
+        severName =
+            boost::make_shared<std::string>(db->setServerName(*token, zone));
         memoryLock.releaseLock();
 
         memoryLock.getLock();
@@ -375,11 +374,11 @@ void requestManager() {
         memoryLock.releaseLock();
 
         memoryLock.getLock();
-        delete(db);
+        delete (db);
         memoryLock.releaseLock();
       }
 
-    } else { //Server Request is not correct
+    } else { // Server Request is not correct
 
       memoryLock.getLock();
       log = boost::make_shared<std::string>(incorrect);
@@ -524,45 +523,37 @@ void logManager() {
 
   unsigned int killed_queues = 0;
 
-  while ( killed_queues != 2 ) // There are only 2 queues
+  while (killed_queues != 2) // There are only 2 queues
   {
-    if ( ! processerLogQueue.empty() )
-    {
+    if (!processerLogQueue.empty()) {
       memoryLock.getLock();
       log = processerLogQueue.Dequeue();
       memoryLock.releaseLock();
-      if (*log != kill_yourself)
-      {
-        //memoryLock.getLock();
-        //writeLog( logFileProcesser, log);
-        //memoryLock.releaseLock();
+      if (*log != kill_yourself) {
+        // memoryLock.getLock();
+        // writeLog( logFileProcesser, log);
+        // memoryLock.releaseLock();
 
         memoryLock.getLock();
         log.reset();
         memoryLock.releaseLock();
-      }
-      else
-      {
+      } else {
         killed_queues++;
       }
     }
-    if ( ! managerLogQueue.empty() )
-    {
+    if (!managerLogQueue.empty()) {
       memoryLock.getLock();
       log = managerLogQueue.Dequeue();
       memoryLock.releaseLock();
-      if (*log != kill_yourself)
-      {
-         //memoryLock.getLock();
-         //writeLog( logFileManager, log);
-         //memoryLock.releaseLock();
+      if (*log != kill_yourself) {
+        // memoryLock.getLock();
+        // writeLog( logFileManager, log);
+        // memoryLock.releaseLock();
 
-         memoryLock.getLock();
-         log.reset();
-         memoryLock.releaseLock();
-      }
-      else
-      {
+        memoryLock.getLock();
+        log.reset();
+        memoryLock.releaseLock();
+      } else {
         killed_queues++;
       }
     }
@@ -570,23 +561,22 @@ void logManager() {
   }
 }
 
-bool writeLog(const std::string path,
-              boost::shared_ptr<std::string> data) {
+bool writeLog(const std::string path, boost::shared_ptr<std::string> data) {
 
   time_t *t;
   struct tm *now;
 
-  //memoryLock.getLock();
+  // memoryLock.getLock();
   t = new time_t(std::time(0));
   now = std::localtime(t);
 
-  //boost:i:shared_ptr<std::string> log(data);
-  //memoryLock.releaseLock();
+  // boost:i:shared_ptr<std::string> log(data);
+  // memoryLock.releaseLock();
 
   std::ofstream outfile;
 
-  //memoryLock.getLock();
-  outfile.open( path.c_str(), std::ios_base::app);
+  // memoryLock.getLock();
+  outfile.open(path.c_str(), std::ios_base::app);
   outfile << "[";
   outfile << (now->tm_year + 1900) << '/';
   if (now->tm_mon < 9)
@@ -612,7 +602,7 @@ bool writeLog(const std::string path,
   outfile << "\n";
 
   outfile.close();
-  delete(t);
-  //memoryLock.releaseLock();
+  delete (t);
+  // memoryLock.releaseLock();
   return true;
 }

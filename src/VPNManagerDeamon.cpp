@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
   boost::thread processer;
   boost::thread manager;
-//  boost::thread logger;
+  boost::thread logger;
 
   // The path where logs will be written
   string logFolder = string("log/Manager/");
@@ -74,13 +74,13 @@ int main(int argc, char *argv[]) {
 
   processer = boost::thread(processRequests, portnumber);
   manager = boost::thread(requestManager);
-  //logger = boost::thread( logManager );
+  logger = boost::thread( logManager );
 
   cout << "Port Number: " << portnumber << endl;
 
   processer.join();
   manager.join();
-  //logger.join();
+  logger.join();
 
   cout << "End" << endl;
 
