@@ -81,12 +81,12 @@ $ cmake .
 $ make
 ```
 
-##Finding memory leaks using valgind (gcc)
+## Finding memory leaks using valgind (gcc)
 ```
  valgrind --tool=memcheck --leak-check=full  ./bin/VPNManagerDaemon PORT_NUMBER
 ```
 
-##Testing issues
+## Testing issues
 
 During a test it throwed this error:
 ```
