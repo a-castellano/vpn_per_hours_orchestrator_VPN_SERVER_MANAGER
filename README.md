@@ -81,11 +81,21 @@ $ cmake .
 $ make
 ```
 
-Finding memory leaks using valgind
+##Finding memory leaks using valgind (gcc)
 ```
  valgrind --tool=memcheck --leak-check=full  ./bin/VPNManagerDaemon PORT_NUMBER
 ```
 
+##Testing issues
+
+During a test it throwed this error:
+```
+ElectricFence Exiting: mprotect() failed: Cannot allocate memory
+```
+
+This is happening because the project is not liberating memory.... 
+
+ElectricFence Exiting: mprotect() failed: Cannot allocate memory
 ## TODO
 
 This node is not going to the multi trhead. It will be an single dockerized node. The more nodes the system needs, the more docker will be deployed.

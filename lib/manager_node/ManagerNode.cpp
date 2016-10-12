@@ -533,9 +533,9 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself)
       {
-        memoryLock.getLock();
+        //memoryLock.getLock();
         //writeLog( logFileProcesser, log);
-        memoryLock.releaseLock();
+        //memoryLock.releaseLock();
 
         memoryLock.getLock();
         log.reset();
@@ -553,9 +553,9 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself)
       {
-         memoryLock.getLock();
+         //memoryLock.getLock();
          //writeLog( logFileManager, log);
-         memoryLock.releaseLock();
+         //memoryLock.releaseLock();
 
          memoryLock.getLock();
          log.reset();
