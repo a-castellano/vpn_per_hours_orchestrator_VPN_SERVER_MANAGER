@@ -2,53 +2,24 @@
 // Álvaro Castellano Vela 24/02/2016
 
 #define BOOST_SP_USE_QUICK_ALLOCATOR 
-#ifndef DATABASEHANDLER_H
 #include "DatabaseHandler.h"
-#endif
 
-#ifndef STRING
 #include <string>
-#endif
-
-#ifndef VECTOR
 #include <vector>
-#endif
-
-#ifndef STDLIB
 #include <stdlib.h>
-#endif
-
-#ifndef IOSTREAM
 #include <iostream>
-#endif
 
-#ifndef MYSQL_CONNECTION_H
 #include "mysql_connection.h"
-#endif
-
-#ifndef CPPCONN_DRIVER_H
 #include <cppconn/driver.h>
-#endif
-
-#ifndef CPPCONN_EXCEPTION_H
 #include <cppconn/exception.h>
-#endif
-
-#ifndef CPPCONN_RESULTSET_H
 #include <cppconn/resultset.h>
-#endif
-
-#ifndef CPPCONN_STATEMENT_H
 #include <cppconn/statement.h>
-#endif
-
-#ifndef CPPCONN_PREPARED_STATEMENT_H
 #include <cppconn/prepared_statement.h>
-#endif
 
-#ifndef BOOST_REGEX
 #include <boost/regex.hpp>
-#endif
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/thread.hpp>
 
 DatabaseHandler::DatabaseHandler( const std::string & givenHost , const unsigned int & givenPort , const std::string & givenUser , const std::string & givenPass , const std::string & givenDatabase)
 :pass(givenPass), database(givenDatabase), connected(false) 
@@ -160,11 +131,11 @@ std::string DatabaseHandler::getErrorMsg( void )
 	return errormsg;
 }
 
-unsigned int  DatabaseHandler::getServerZoneFromToken( const std::string & token )
+unsigned int  DatabaseHandler::getServerZoneFromToken( boost::shared_ptr<std::string> token )
 {
 	std::stringstream query;
   unsigned int zone;
-  query << "SELECT zone FROM servers WHERE token='" << token << "' LIMIT 1";
+  query << "SELECT zone FROM servers WHERE token='" << *token << "' LIMIT 1";
 	connect();
 	if ( connected )
 	{
@@ -172,7 +143,7 @@ unsigned int  DatabaseHandler::getServerZoneFromToken( const std::string & token
 		if (this->res->next())
 		{
 			zone = std::stoi( this->res->getString("zone") );
-      this->res->next();
+      while(this->res->next());
 		}
 		else
 		{
@@ -219,7 +190,7 @@ std::vector<std::string> DatabaseHandler::getProvidersFromZone( const unsigned i
 	return providers;
 }
 
-std::string DatabaseHandler::setServerName(const std::string &server_token ,const unsigned int & zone_id)
+boost::shared_ptr<std::string> DatabaseHandler::setServerName(boost::shared_ptr<std::string> server_token ,const unsigned int & zone_id)
 {
 	std::stringstream user_query;
 	std::stringstream servers_query;
@@ -229,10 +200,10 @@ std::string DatabaseHandler::setServerName(const std::string &server_token ,cons
 
 	std::stringstream candidateURL;
 	std::string  currentURL;
-	std::string finalURL;
+  boost::shared_ptr<std::string> finalURL;
 	bool finded;
 
-	user_query << "SELECT username FROM users JOIN servers WHERE servers.token='" << server_token << "' LIMIT 1";
+	user_query << "SELECT username FROM users JOIN servers WHERE servers.token='" << *server_token << "' LIMIT 1";
 	connect();
 	if ( connected )
 	{
@@ -244,7 +215,7 @@ std::string DatabaseHandler::setServerName(const std::string &server_token ,cons
 	}
 	disconnect();
 
-	servers_query << "SELECT name FROM servers WHERE zone=" << zone_id << " AND token <> '" << server_token <<"'";
+	servers_query << "SELECT name FROM servers WHERE zone=" << zone_id << " AND token <> '" << *server_token <<"'";
 	connect();
 	if ( connected )
 	{
@@ -258,11 +229,11 @@ std::string DatabaseHandler::setServerName(const std::string &server_token ,cons
 	disconnect();
 
 	for (int i = 1 ,finded = false; finded==false ; i++){
-		candidateURL << zone_initials[zone_id] << i << std::string(".") << username << ".vpn.windmaker.net"; 
+		candidateURL << zone_initials[zone_id] << i << std::string(".") << username << ".vpn.windmaker.net";
 		if( server_names.find(candidateURL.str()) == server_names.end() )
 		{
 			finded = true;
-			finalURL = candidateURL.str();
+			finalURL = boost::make_shared<std::string>(candidateURL.str());
 
 		}
 		candidateURL.str("");
@@ -271,16 +242,16 @@ std::string DatabaseHandler::setServerName(const std::string &server_token ,cons
 	return finalURL;
 	} //DatabaseHandler::setServerName
 
-bool DatabaseHandler::updateDBField(const std::string &token, const std::string &field, const std::string &type ,const std::string &value) 
+bool DatabaseHandler::updateDBField(boost::shared_ptr<std::string> token, const std::string &field, const std::string &type ,boost::shared_ptr<std::string> value) 
 {
 	std::stringstream query;
 	if (type == std::string("string"))
 	{
-		query << "UPDATE servers SET " << field << " = '" << value << "' WHERE token='" << token << "'";
+		query << "UPDATE servers SET " << field << " = '" << *value << "' WHERE token='" << *token << "'";
 	}
 	else
 	{
-		query << "UPDATE servers SET " << field << " = " << value << " WHERE token='" << token << "'";
+		query << "UPDATE servers SET " << field << " = " << *value << " WHERE token='" << *token << "'";
 	}
 	connect();
 	if ( connected )

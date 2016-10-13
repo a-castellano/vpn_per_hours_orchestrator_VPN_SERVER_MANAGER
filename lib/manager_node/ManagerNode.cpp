@@ -238,8 +238,6 @@ void requestManager() {
 
   boost::shared_ptr<std::string> request;
 
-  boost::shared_ptr<std::string> command;
-  boost::shared_ptr<std::string> token;
 
   // This wont be here in next version
   std::string address("paula.es.una.ninja");
@@ -255,8 +253,6 @@ void requestManager() {
   std::string selectedProvider;
   unsigned int providerRandomId;
 
-  boost::shared_ptr<std::string> severName;
-
   std::string kill_yourself("__KILL_YOURSELF__");
   std::string processed("Request totally processed.");
   std::string received("Request reveived -> ");
@@ -264,13 +260,26 @@ void requestManager() {
   std::string incorrect("The request is not correct");
   std::string errordb("Error on database connection");
 
-  std::string noPointerStarted = std::string("Manager started.");
 
   boost::shared_ptr<ServerRequest> serverRequest;
   boost::shared_ptr<Server> server;
   // Server *server;
 
+  // Database variables
+  std::string string_type("string");
+  std::string name_field("name");
+
+  // ServerRequest variables
+  boost::shared_ptr<std::string> command;
+  boost::shared_ptr<std::string> token;
+
+  //Server variables
+  boost::shared_ptr<std::string> severName;
+
+  // Log variables
   boost::shared_ptr<std::string> log;
+  std::string noPointerStarted = std::string("Manager started.");
+  std::string providersTitle = std::string("Providers:");
 
   memoryLock.getLock();
   log = boost::make_shared<std::string>(noPointerStarted);
@@ -373,9 +382,8 @@ void requestManager() {
         // Continue handling the request
 
         memoryLock.getLock();
-        zone = db->getServerZoneFromToken(*token);
-        severName =
-            boost::make_shared<std::string>(db->setServerName(*token, zone));
+        zone = db->getServerZoneFromToken(token);
+        severName = db->setServerName(token, zone);
         memoryLock.releaseLock();
 
         memoryLock.getLock();
@@ -389,12 +397,42 @@ void requestManager() {
         memoryLock.releaseLock();
 
         memoryLock.getLock();
-        db->updateDBField(token, std::string("name"),std::string("string"), severName);
+        db->updateDBField(token, name_field, string_type, severName);
         memoryLock.releaseLock();
 
         memoryLock.getLock();
-        delete (db);
+        delete(db);
         memoryLock.releaseLock();
+
+
+        memoryLock.getLock();
+        db_zones = new DatabaseHandler(address, 3306, user, password, std::string("vpn_zones"));
+        memoryLock.releaseLock();
+
+        memoryLock.getLock();
+        providers = db_zones->getProvidersFromZone(zone);
+        memoryLock.releaseLock();
+
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(providersTitle);
+        memoryLock.releaseLock();
+
+        managerLogQueue.Enqueue(log);
+
+        for (std::string provider : providers) {
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(provider);
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+        };
+
+        memoryLock.getLock();
+        delete(db_zones);
+        memoryLock.releaseLock();
+
+
+
       }
 
     } else { // Server Request is not correct
@@ -459,8 +497,7 @@ void requestManager() {
               db->updateDBField(token, std::string("name"),std::string("string"), severName);
               free(db);
 
-              db_zones = new DatabaseHandler(address, 3306, user, password,
-       std::string("vpn_zones"));
+              db_zones = new DatabaseHandler(address, 3306, user, password, std::string("vpn_zones"));
               providers = db_zones->getProvidersFromZone(zone);
 
               log = std::string("Providers: ");

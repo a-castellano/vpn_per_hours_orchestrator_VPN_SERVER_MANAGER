@@ -50,8 +50,8 @@ ADD_EXECUTABLE( server_request_test tests/server_request_test.cpp lib/server_req
   lib/vpn_lock/VPNLock.cpp )
 TARGET_LINK_LIBRARIES( server_request_test ${CONAN_LIBS} )
 
-ADD_EXECUTABLE( mysql_test src/mysql_test.cpp lib/database_handler/DatabaseHandler.cpp )
-TARGET_LINK_LIBRARIES( mysql_test ${CONAN_LIBS} mysqlcppconn )
+#ADD_EXECUTABLE( mysql_test src/mysql_test.cpp lib/database_handler/DatabaseHandler.cpp )
+#TARGET_LINK_LIBRARIES( mysql_test ${CONAN_LIBS} mysqlcppconn )
 
 #ADD_EXECUTABLE( log_test src/log_test.cpp lib/log/Log.cpp lib/log/Logger.cpp )
 #TARGET_LINK_LIBRARIES( log_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT} )

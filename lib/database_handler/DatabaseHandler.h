@@ -8,6 +8,8 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
+#include <boost/shared_ptr.hpp>
+
 class DatabaseHandler
 {
 
@@ -22,14 +24,14 @@ class DatabaseHandler
 
 		bool queryTest( void );
 
-		unsigned int getServerZoneFromToken( const std::string &  );
+		unsigned int getServerZoneFromToken( boost::shared_ptr<std::string>  );
 
 		std::vector<std::string> getProvidersFromZone( const unsigned int & );
 
-		std::string setServerName(const std::string & ,const unsigned int &);
+                boost::shared_ptr<std::string> setServerName( boost::shared_ptr<std::string> ,const unsigned int &);
 
-		bool updateDBField(const std::string &, const std::string &,
-				   const std::string & ,const std::string &);
+		bool updateDBField( boost::shared_ptr<std::string>, const std::string &,
+				   const std::string & , boost::shared_ptr<std::string>);
 		std::string getErrorMsg( void );
 
 
