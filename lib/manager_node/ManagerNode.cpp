@@ -75,7 +75,6 @@ bool processRequests(const unsigned int port) {
   socklen_t clilen;
   char buffer[256];
   struct sockaddr_in serv_addr, cli_addr;
-  int n; // WTF is n?
 
   // Log variables
 
@@ -524,15 +523,13 @@ void logManager() {
   std::ofstream outfileManager(logFileManager);
   std::ofstream outfileProcesser(logFileProcesser);
 
-  if (!outfileManager.is_open())
-  {
+  if (!outfileManager.is_open()) {
     std::cerr << "Couldn't open '" << logFileManager << "'." << std::endl;
     return;
   }
 
-  if (!outfileProcesser.is_open())
-  {
-     std::cerr << "Couldn't open '" << logFileProcesser << "'." << std::endl; 
+  if (!outfileProcesser.is_open()) {
+    std::cerr << "Couldn't open '" << logFileProcesser << "'." << std::endl;
   }
 
   unsigned int killed_queues = 0;
@@ -545,7 +542,7 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself) {
 
-        writeLog( outfileProcesser, log);
+        writeLog(outfileProcesser, log);
 
         memoryLock.getLock();
         log.reset();
@@ -560,7 +557,7 @@ void logManager() {
       memoryLock.releaseLock();
       if (*log != kill_yourself) {
 
-        writeLog( outfileManager, log);
+        writeLog(outfileManager, log);
 
         memoryLock.getLock();
         log.reset();
@@ -573,7 +570,7 @@ void logManager() {
   }
 }
 
-bool writeLog( std::ofstream &outfile, boost::shared_ptr<std::string> data) {
+bool writeLog(std::ofstream &outfile, boost::shared_ptr<std::string> data) {
 
   time_t t;
   struct tm *now;
@@ -607,7 +604,7 @@ bool writeLog( std::ofstream &outfile, boost::shared_ptr<std::string> data) {
   outfile << *data;
   outfile << "\n";
 
-  //memoryLock.getLock();
- // memoryLock.releaseLock();
+  // memoryLock.getLock();
+  // memoryLock.releaseLock();
   return true;
 }
