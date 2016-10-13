@@ -90,6 +90,12 @@ $ cmake .
 $ make
 ```
 
+## Debuging
+```
+ldb-3.8 ./bin/VPNManagerDaemon
+run PORT_NUMBER
+```
+
 ## Finding memory leaks using valgind (gcc)
 ```
  valgrind --tool=memcheck --leak-check=full  ./bin/VPNManagerDaemon PORT_NUMBER
