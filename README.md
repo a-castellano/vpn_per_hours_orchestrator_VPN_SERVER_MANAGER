@@ -68,6 +68,13 @@ $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libst
 $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
 ```
 
+Using Clang
+```
+$ export CC=/usr/bin/clang
+$ export CXX=/usr/bin/clang++
+$ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
+```
+
 ### Build
 
 Build for Debug
