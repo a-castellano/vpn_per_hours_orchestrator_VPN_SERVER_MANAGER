@@ -25,7 +25,7 @@ Installing required packages using pip
 Install required packages using apt-get
 
 ```
-# apt-get install git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+# apt-get install clang lldb git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
 ```
 
 Installing required packages using pip
@@ -53,6 +53,8 @@ $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libst
 
 Using Clang
 ```
+$ export CC=/usr/bin/clang
+$ export CXX=/usr/bin/clang++
 $ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
 ```
 
