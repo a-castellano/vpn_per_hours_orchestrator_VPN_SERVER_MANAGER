@@ -129,16 +129,7 @@ bool processRequests(const unsigned int port) {
       memoryLock.getLock();
       request = boost::make_shared<std::string>(buffer);
       memoryLock.releaseLock();
-/*
-      memoryLock.getLock();
-      log = boost::make_shared<std::string>(*request);
-      memoryLock.releaseLock();
 
-      processerLogQueue.Enqueue(log);
-      memoryLock.getLock();
-      log.reset();
-      memoryLock.releaseLock();
-*/
       if (*request == kill_yourself) {
         memoryLock.getLock();
         log = boost::make_shared<std::string>(
@@ -152,6 +143,8 @@ bool processRequests(const unsigned int port) {
         request.reset();
         memoryLock.releaseLock();
 
+        // Sending killing message to the manager.
+
         memoryLock.getLock();
         request = boost::make_shared<std::string>(kill_yourself);
         memoryLock.releaseLock();
@@ -161,6 +154,8 @@ bool processRequests(const unsigned int port) {
         memoryLock.getLock();
         request.reset();
         memoryLock.releaseLock();
+
+        // Sending killing message to logger
 
         memoryLock.getLock();
         log = boost::make_shared<std::string>(kill_yourself);
@@ -218,7 +213,7 @@ bool processRequests(const unsigned int port) {
    */
 
   memoryLock.getLock();
-  log = boost::make_shared<std::string>("Proccesser finished.");
+  log = boost::make_shared<std::string>("Kill message received... R.I.P.");
   memoryLock.releaseLock();
 
   processerLogQueue.Enqueue(log);
@@ -290,15 +285,6 @@ void requestManager() {
     request.reset();
     request = managerQueue.Dequeue();
 
-    memoryLock.getLock();
-    log = boost::make_shared<std::string>(/*received +*/ *request);
-    memoryLock.releaseLock();
-
-    managerLogQueue.Enqueue(log);
-    memoryLock.getLock();
-    log.reset();
-    memoryLock.releaseLock();
-
     if (*request == kill_yourself) {
       memoryLock.getLock();
       log = boost::make_shared<std::string>("Kill message received... R.I.P.");
@@ -310,8 +296,30 @@ void requestManager() {
       log.reset();
       memoryLock.releaseLock();
 
+      // Sending killing message to logger
+
+      memoryLock.getLock();
+      log = boost::make_shared<std::string>(*request);
+      memoryLock.releaseLock();
+
+      managerLogQueue.Enqueue(log);
+
+      memoryLock.getLock();
+      log.reset();
+      memoryLock.releaseLock();
+
       break;
     }
+
+    memoryLock.getLock();
+    log = boost::make_shared<std::string>(*request);
+    memoryLock.releaseLock();
+
+    managerLogQueue.Enqueue(log);
+
+    memoryLock.getLock();
+    log.reset();
+    memoryLock.releaseLock();
 
     // Process the request
 
@@ -361,6 +369,9 @@ void requestManager() {
       }
 
       else {
+
+        // Continue handling the request
+
         memoryLock.getLock();
         zone = db->getServerZoneFromToken(*token);
         severName =
@@ -375,6 +386,10 @@ void requestManager() {
 
         memoryLock.getLock();
         log.reset();
+        memoryLock.releaseLock();
+
+        memoryLock.getLock();
+        db->updateDBField(token, std::string("name"),std::string("string"), severName);
         memoryLock.releaseLock();
 
         memoryLock.getLock();
@@ -441,8 +456,7 @@ void requestManager() {
        database);
               db->updateDBField(token, std::string("name"),
        std::string("string"), severName);
-              db->updateDBField(token, std::string("name"),
-       std::string("string"), severName);
+              db->updateDBField(token, std::string("name"),std::string("string"), severName);
               free(db);
 
               db_zones = new DatabaseHandler(address, 3306, user, password,
