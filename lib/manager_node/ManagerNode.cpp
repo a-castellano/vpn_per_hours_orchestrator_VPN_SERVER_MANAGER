@@ -75,6 +75,7 @@ bool processRequests(const unsigned int port) {
   socklen_t clilen;
   char buffer[256];
   struct sockaddr_in serv_addr, cli_addr;
+  int n_read;
 
   // Log variables
 
@@ -117,38 +118,27 @@ bool processRequests(const unsigned int port) {
 
   clilen = sizeof(cli_addr);
 
-  // newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-
-  // boost::asio::io_service io_service;
-  // tcp::endpoint endpoint(tcp::v4(), port);
-  // tcp::acceptor acceptor(io_service, endpoint);
-
-  // tcp::socket socket(io_service);
-  // tcp::iostream stream;
-
-  // boost::system::error_code ignored_error;
-
   try {
 
     for (;;) {
       newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
       bzero(buffer, 256);
-      n = read(newsockfd, buffer, 255);
+      n_read = read(newsockfd, buffer, 255);
       close(newsockfd);
 
       memoryLock.getLock();
       request = boost::make_shared<std::string>(buffer);
       memoryLock.releaseLock();
-
+/*
       memoryLock.getLock();
-      log = boost::make_shared<std::string>(/*received +*/ *request);
+      log = boost::make_shared<std::string>(*request);
       memoryLock.releaseLock();
 
       processerLogQueue.Enqueue(log);
       memoryLock.getLock();
       log.reset();
       memoryLock.releaseLock();
-
+*/
       if (*request == kill_yourself) {
         memoryLock.getLock();
         log = boost::make_shared<std::string>(
@@ -159,26 +149,43 @@ bool processRequests(const unsigned int port) {
 
         memoryLock.getLock();
         log.reset();
-
         request.reset();
         memoryLock.releaseLock();
 
-        // for (unsigned int t = 0; t < numthreads; t++) {
         memoryLock.getLock();
         request = boost::make_shared<std::string>(kill_yourself);
         memoryLock.releaseLock();
 
         managerQueue.Enqueue(request);
+
         memoryLock.getLock();
         request.reset();
         memoryLock.releaseLock();
-        //}
 
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(kill_yourself);
+        memoryLock.releaseLock();
+
+        processerLogQueue.Enqueue(log);
+
+        memoryLock.getLock();
+        log.reset();
+        memoryLock.releaseLock();
         break;
       }
 
       else // request is not KILL_YOURSELF
       {
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(*request);
+        memoryLock.releaseLock();
+
+        processerLogQueue.Enqueue(log);
+
+        memoryLock.getLock();
+        log.reset();
+        memoryLock.releaseLock();
+
         managerQueue.Enqueue(request);
         request.reset();
       }
@@ -204,6 +211,12 @@ bool processRequests(const unsigned int port) {
     return false;
   }
 
+  /*
+   * Processer has received kill message
+   * It has already send the kill message to manager
+   *
+   */
+
   memoryLock.getLock();
   log = boost::make_shared<std::string>("Proccesser finished.");
   memoryLock.releaseLock();
@@ -211,14 +224,6 @@ bool processRequests(const unsigned int port) {
   processerLogQueue.Enqueue(log);
   memoryLock.getLock();
   log.reset();
-  memoryLock.releaseLock();
-
-  // The only time we enqueue one unique item
-
-  memoryLock.getLock();
-  memoryLock.releaseLock();
-
-  memoryLock.getLock();
   memoryLock.releaseLock();
 
   close(sockfd);

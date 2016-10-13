@@ -80,19 +80,17 @@ $ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=lib
 Build for Debug
 ```
 cmake -DCMAKE_BUILD_TYPE=Debug .
+make
 ```
 Build for Release
 ```
 cmake -DCMAKE_BUILD_TYPE=Release .
-```
-```
-$ cmake .
 $ make
 ```
 
 ## Debuging
 ```
-ldb-3.8 ./bin/VPNManagerDaemon
+lldb-3.8 ./bin/VPNManagerDaemon
 run PORT_NUMBER
 ```
 
