@@ -575,12 +575,12 @@ void logManager() {
 
 bool writeLog( std::ofstream &outfile, boost::shared_ptr<std::string> data) {
 
-  time_t *t;
+  time_t t;
   struct tm *now;
 
   memoryLock.getLock();
-  t = new time_t(std::time(0));
-  now = std::localtime(t);
+  t = time_t(std::time(0));
+  now = std::localtime(&t);
   memoryLock.releaseLock();
 
   outfile << "[";
@@ -607,8 +607,7 @@ bool writeLog( std::ofstream &outfile, boost::shared_ptr<std::string> data) {
   outfile << *data;
   outfile << "\n";
 
-  memoryLock.getLock();
-  delete (t);
-  memoryLock.releaseLock();
+  //memoryLock.getLock();
+ // memoryLock.releaseLock();
   return true;
 }
