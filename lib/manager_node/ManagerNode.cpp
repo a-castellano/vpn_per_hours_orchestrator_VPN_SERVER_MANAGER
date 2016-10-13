@@ -521,6 +521,20 @@ void logManager() {
   std::string logFileProcesser("log/Processer.log");
   std::string kill_yourself("__KILL_YOURSELF__");
 
+  std::ofstream outfileManager(logFileManager);
+  std::ofstream outfileProcesser(logFileProcesser);
+
+  if (!outfileManager.is_open())
+  {
+    std::cerr << "Couldn't open '" << logFileManager << "'." << std::endl;
+    return;
+  }
+
+  if (!outfileProcesser.is_open())
+  {
+     std::cerr << "Couldn't open '" << logFileProcesser << "'." << std::endl; 
+  }
+
   unsigned int killed_queues = 0;
 
   while (killed_queues != 2) // There are only 2 queues
@@ -530,9 +544,8 @@ void logManager() {
       log = processerLogQueue.Dequeue();
       memoryLock.releaseLock();
       if (*log != kill_yourself) {
-        // memoryLock.getLock();
-        // writeLog( logFileProcesser, log);
-        // memoryLock.releaseLock();
+
+        writeLog( outfileProcesser, log);
 
         memoryLock.getLock();
         log.reset();
@@ -546,9 +559,8 @@ void logManager() {
       log = managerLogQueue.Dequeue();
       memoryLock.releaseLock();
       if (*log != kill_yourself) {
-        // memoryLock.getLock();
-        // writeLog( logFileManager, log);
-        // memoryLock.releaseLock();
+
+        writeLog( outfileManager, log);
 
         memoryLock.getLock();
         log.reset();
@@ -561,22 +573,16 @@ void logManager() {
   }
 }
 
-bool writeLog(const std::string path, boost::shared_ptr<std::string> data) {
+bool writeLog( std::ofstream &outfile, boost::shared_ptr<std::string> data) {
 
   time_t *t;
   struct tm *now;
 
-  // memoryLock.getLock();
+  memoryLock.getLock();
   t = new time_t(std::time(0));
   now = std::localtime(t);
+  memoryLock.releaseLock();
 
-  // boost:i:shared_ptr<std::string> log(data);
-  // memoryLock.releaseLock();
-
-  std::ofstream outfile;
-
-  // memoryLock.getLock();
-  outfile.open(path.c_str(), std::ios_base::app);
   outfile << "[";
   outfile << (now->tm_year + 1900) << '/';
   if (now->tm_mon < 9)
@@ -601,8 +607,8 @@ bool writeLog(const std::string path, boost::shared_ptr<std::string> data) {
   outfile << *data;
   outfile << "\n";
 
-  outfile.close();
+  memoryLock.getLock();
   delete (t);
-  // memoryLock.releaseLock();
+  memoryLock.releaseLock();
   return true;
 }
