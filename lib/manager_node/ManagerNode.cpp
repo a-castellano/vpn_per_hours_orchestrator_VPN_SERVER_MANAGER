@@ -262,8 +262,7 @@ void requestManager() {
 
 
   boost::shared_ptr<ServerRequest> serverRequest;
-  boost::shared_ptr<Server> server;
-  // Server *server;
+  Server *server;
 
   // Database variables
   std::string string_type("string");
@@ -442,8 +441,18 @@ void requestManager() {
         log.reset();
         memoryLock.releaseLock();
 
+        memoryLock.getLock();
         server = CreateServer(selectedProvider, token);
+        memoryLock.getLock();
 
+        memoryLock.getLock();
+        server->setZone(zone);
+        server->setServerName(*severName);
+        memoryLock.releaseLock();
+
+        curlLock.getLock();
+        server->create();
+        curlLock.releaseLock();
       }
 
     } else { // Server Request is not correct

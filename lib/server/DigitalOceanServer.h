@@ -7,23 +7,25 @@
 #include "Server.h"
 #include <string>
 
-class DigitalOceanServer : public Server
-{
-        public:
-                DigitalOceanServer( const std::string & );
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
-		bool create();
-		bool destroy();
-		bool powerOn();
-		bool powerOff();
+class DigitalOceanServer : public Server {
+public:
+  DigitalOceanServer(boost::shared_ptr<std::string>);
 
-		const std::string serverType();
+  bool create();
+  bool destroy();
+  bool powerOn();
+  bool powerOff();
 
-		static Server * Create(const std::string &token) { return new DigitalOceanServer(token); }
+  const std::string serverType();
 
-		~DigitalOceanServer();
+  static Server *Create(boost::shared_ptr<std::string> token) {
+    return new DigitalOceanServer(token);
+  }
 
-
+  ~DigitalOceanServer();
 };
 
 #endif

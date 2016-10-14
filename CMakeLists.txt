@@ -43,8 +43,8 @@ INCLUDE_DIRECTORIES(lib/vpn_lock)
 INCLUDE_DIRECTORIES(lib/manager_node)
 
 
-ADD_EXECUTABLE( main src/test.cpp lib/server_request/ServerRequest.cpp lib/vpn_lock/VPNLock.cpp )
-TARGET_LINK_LIBRARIES( main ${CONAN_LIBS})
+#ADD_EXECUTABLE( main src/test.cpp lib/server_request/ServerRequest.cpp lib/vpn_lock/VPNLock.cpp )
+#TARGET_LINK_LIBRARIES( main ${CONAN_LIBS})
 
 ADD_EXECUTABLE( server_request_test tests/server_request_test.cpp lib/server_request/ServerRequest.cpp
   lib/vpn_lock/VPNLock.cpp )
@@ -56,9 +56,9 @@ TARGET_LINK_LIBRARIES( server_request_test ${CONAN_LIBS} )
 #ADD_EXECUTABLE( log_test src/log_test.cpp lib/log/Log.cpp lib/log/Logger.cpp )
 #TARGET_LINK_LIBRARIES( log_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
 
-ADD_EXECUTABLE( server_test src/server_test.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
-  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp )
-TARGET_LINK_LIBRARIES( server_test ${CONAN_LIBS})
+#ADD_EXECUTABLE( server_test src/server_test.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
+#  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp )
+#TARGET_LINK_LIBRARIES( server_test ${CONAN_LIBS})
 
 ADD_EXECUTABLE( pointer_test src/server_pointer.cpp lib/server_pointer/ServerPointer.cpp )
 TARGET_LINK_LIBRARIES( pointer_test ${CONAN_LIBS})

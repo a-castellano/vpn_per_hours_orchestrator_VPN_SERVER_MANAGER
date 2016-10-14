@@ -12,7 +12,10 @@
 
 #include <boost/property_tree/json_parser.hpp>
 
-VultrServer::VultrServer(const std::string &token) : Server(token) {}
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+
+VultrServer::VultrServer(boost::shared_ptr<std::string> token) : Server(token) {}
 
 const std::string VultrServer::serverType(void) { return std::string("Vultr"); }
 

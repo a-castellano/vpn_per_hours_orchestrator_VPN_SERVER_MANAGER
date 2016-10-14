@@ -2,9 +2,11 @@
 // Álvaro Castellano Vela 11/03/2016
 
 #include "Server.h"
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
-Server::Server(const std::string &token)
-:token(token)
+Server::Server(boost::shared_ptr<std::string> token)
+:token(*token)
 {}
 
 const std::string Server::getToken( void )

@@ -9,10 +9,11 @@
 #include "Server.h"
 #include "DigitalOceanServer.h"
 #include "VultrServer.h"
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
 
-
-Server *CreateServer(const std::string &,const std::string &);
+Server *CreateServer(const std::string &, boost::shared_ptr<std::string> );
 
 
 #endif

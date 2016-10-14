@@ -6,10 +6,12 @@
 
 #include "Server.h"
 #include <string>
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
 class VultrServer : public Server {
 public:
-  VultrServer(const std::string &);
+  VultrServer(boost::shared_ptr<std::string>);
 
   bool create();
   bool destroy();
@@ -20,7 +22,7 @@ public:
 
   ~VultrServer();
 
-  static Server * Create(const std::string &token) { return new
+  static Server * Create(boost::shared_ptr<std::string> token) { return new
 	  VultrServer(token); }
 
 private:

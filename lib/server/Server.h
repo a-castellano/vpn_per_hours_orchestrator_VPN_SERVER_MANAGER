@@ -4,54 +4,57 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
+
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include "api_keys.h"
 
-class Server
-{
-	public:
-		Server( const std::string & );
+class Server {
+public:
+  Server(boost::shared_ptr<std::string>);
 
-		virtual bool create() = 0;
-		virtual bool destroy() = 0;
-		virtual bool powerOn() = 0;
-		virtual bool powerOff() = 0;
+  virtual bool create() = 0;
+  virtual bool destroy() = 0;
+  virtual bool powerOn() = 0;
+  virtual bool powerOff() = 0;
 
-		virtual const std::string serverType();
-		const std::string getToken();
-		const unsigned int getZone();
-		void setZone(const unsigned int &);
-		
-		void setTrueZone(const std::string &);
-		std::string  getTrueZone();
+  virtual const std::string serverType();
+  const std::string getToken();
+  const unsigned int getZone();
+  void setZone(const unsigned int &);
 
-		void setMachineID(const std::string &);
-		std::string getMachineID();
+  void setTrueZone(const std::string &);
+  std::string getTrueZone();
 
-		void setServerIP(const std::string &);
-		std::string getServerIP();
+  void setMachineID(const std::string &);
+  std::string getMachineID();
 
-		void setServerName(const std::string &);
-		std::string getServerName(); 
+  void setServerIP(const std::string &);
+  std::string getServerIP();
 
-		static size_t data_write(void*, size_t , size_t ,void*);//this
+  void setServerName(const std::string &);
+  std::string getServerName();
 
-		void setVpnGroups(const std::vector<std::string> &);
+  static size_t data_write(void *, size_t, size_t, void *); // this
 
-		//this function should be private
-		~Server();
+  void setVpnGroups(const std::vector<std::string> &);
 
-	private:
-		std::string token;
-		std::string state;
-		unsigned int zone;
-		std::string realZone;
-		std::string machineID;
-		std::string serverIP;
-		std::string serverName;
-		std::vector<std::string> vpnGroups;
+  // this function should be private
+  ~Server();
+
+private:
+  std::string token;
+  std::string state;
+  unsigned int zone;
+  std::string realZone;
+  std::string machineID;
+  std::string serverIP;
+  std::string serverName;
+  std::vector<std::string> vpnGroups;
 };
 
 #endif

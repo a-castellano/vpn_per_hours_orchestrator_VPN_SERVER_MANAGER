@@ -3,7 +3,10 @@
 
 #include "DigitalOceanServer.h"
 
-DigitalOceanServer::DigitalOceanServer(const std::string &token)
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
+
+DigitalOceanServer::DigitalOceanServer(boost::shared_ptr<std::string> token)
     : Server(token) {}
 
 const std::string DigitalOceanServer::serverType() {
