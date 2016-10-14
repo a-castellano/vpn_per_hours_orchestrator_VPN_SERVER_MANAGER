@@ -280,6 +280,7 @@ void requestManager() {
   boost::shared_ptr<std::string> log;
   std::string noPointerStarted = std::string("Manager started.");
   std::string providersTitle = std::string("Providers:");
+  std::string creating_server_string = std::string("Creating server.");
 
   memoryLock.getLock();
   log = boost::make_shared<std::string>(noPointerStarted);
@@ -431,7 +432,17 @@ void requestManager() {
         delete(db_zones);
         memoryLock.releaseLock();
 
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(creating_server_string);
+        memoryLock.releaseLock();
 
+        managerLogQueue.Enqueue(log);
+
+        memoryLock.getLock();
+        log.reset();
+        memoryLock.releaseLock();
+
+        server = CreateServer(selectedProvider, token);
 
       }
 
