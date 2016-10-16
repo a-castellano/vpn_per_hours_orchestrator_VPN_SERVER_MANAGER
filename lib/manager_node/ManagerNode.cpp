@@ -486,13 +486,13 @@ void requestManager() {
           server->create();
           memoryLock.releaseLock();
 
-          memoryLock->getLock();
+          memoryLock.getLock();
           log = boost::make_shared<std::string>(server_created_string);
           memoryLock.releaseLock();
 
           managerLogQueue.Enqueue(log);
 
-          memoryLock->getLock();
+          memoryLock.getLock();
           log.reset();
           memoryLock.releaseLock();
         }
@@ -515,110 +515,6 @@ void requestManager() {
     serverRequest.reset();
     memoryLock.releaseLock();
 
-    /*
-        ServerRequest *serverRequest = new ServerRequest( request );
-
-        if ( serverRequest->isCorrect() ) {
-
-          command = serverRequest->getCommand();
-          token = serverRequest->getToken();
-
-          log = std::string("Commad: ") + command;
-          logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-          log = std::string("Token: ") + token;
-          logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-          free( serverRequest );
-
-          db = new DatabaseHandler(address, 3306, user, password, database);
-
-          if (!db->dataIsWellFormed()) {
-            log = std::string("Error: Database data is incorrect.");
-            logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-            //Send some alert
-          }
-          else {
-            zone = db->getServerZoneFromToken(token);
-            if (db->hasError()) {
-              log = std::string("Error: getServerZoneFromToken.");
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-              free(db);
-            }
-            else {
-              log = std::string("Zone: ") + std::to_string(zone);
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-              severName = db->setServerName(token, zone);
-              log = std::string("Server Name: ") + severName;
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-              //free(db);
-
-              //db = new DatabaseHandler(address, 3306, user, password,
-       database);
-              db->updateDBField(token, std::string("name"),
-       std::string("string"), severName);
-              db->updateDBField(token,
-       std::string("name"),std::string("string"), severName);
-              free(db);
-
-              db_zones = new DatabaseHandler(address, 3306, user, password,
-       std::string("vpn_zones"));
-              providers = db_zones->getProvidersFromZone(zone);
-
-              log = std::string("Providers: ");
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-              for (std::string provider : providers) {
-                logQueue->Enqueue( logFile + std::string("__-*-__") + provider
-       );
-              }
-
-              if (providers.size() == 1) {
-                selectedProvider = providers[0];
-              }
-              else {
-                srand(time(NULL));
-                providerRandomId = rand() % (providers.size());
-                selectedProvider = providers[providerRandomId];
-              }
-
-              log = std::string("Selected provider: ") + selectedProvider;
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-              free(db_zones);
-
-              log = std::string("Creating server.");
-
-              server = CreateServer(selectedProvider, token);
-              server->setZone(zone);
-              server->setServerName(severName);
-              log = std::string("Server type: ") + server->serverType();
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-              curlLock->getLock();
-
-              //server->create();
-
-              curlLock->releaseLock();
-
-              log = std::string("Server created.");
-              logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-
-              free(server);
-
-            }
-          }
-
-
-
-        }// if ( serverRequest->isCorrect() )
-        else{
-          free(serverRequest);
-          log = std::string("Server resquest incorrect.");
-          logQueue->Enqueue( logFile + std::string("__-*-__") + log );
-        }
-
-    */
     usleep((rand() % 10 + 1) * 10000);
 
     memoryLock.getLock();
