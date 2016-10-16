@@ -621,7 +621,5 @@ bool writeLog(std::ofstream &outfile, boost::shared_ptr<std::string> data) {
   outfile << *data;
   outfile << "\n";
 
-  // memoryLock.getLock();
-  // memoryLock.releaseLock();
   return true;
 }
