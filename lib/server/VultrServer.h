@@ -5,9 +5,9 @@
 #define VULTRSERVER_H
 
 #include "Server.h"
-#include <string>
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
+#include <string>
 
 class VultrServer : public Server {
 public:
@@ -22,8 +22,9 @@ public:
 
   ~VultrServer();
 
-  static Server * Create(boost::shared_ptr<std::string> token) { return new
-	  VultrServer(token); }
+  static Server *Create(boost::shared_ptr<std::string> token) {
+    return new VultrServer(token);
+  }
 
 private:
   const std::string zoneName();

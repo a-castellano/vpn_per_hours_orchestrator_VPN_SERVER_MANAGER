@@ -238,7 +238,6 @@ void requestManager() {
 
   boost::shared_ptr<std::string> request;
 
-
   // This wont be here in next version
   std::string address("paula.es.una.ninja");
   std::string user("vpn");
@@ -260,7 +259,6 @@ void requestManager() {
   std::string incorrect("The request is not correct");
   std::string errordb("Error on database connection");
 
-
   boost::shared_ptr<ServerRequest> serverRequest;
   Server *server;
 
@@ -272,14 +270,16 @@ void requestManager() {
   boost::shared_ptr<std::string> command;
   boost::shared_ptr<std::string> token;
 
-  //Server variables
+  // Server variables
   boost::shared_ptr<std::string> severName;
 
   // Log variables
   boost::shared_ptr<std::string> log;
   std::string noPointerStarted = std::string("Manager started.");
   std::string providersTitle = std::string("Providers:");
+  std::string selected_provider_string = std::string("Selected provider");
   std::string creating_server_string = std::string("Creating server.");
+  std::string server_created_string = std::string("Server created.");
 
   memoryLock.getLock();
   log = boost::make_shared<std::string>(noPointerStarted);
@@ -401,12 +401,12 @@ void requestManager() {
         memoryLock.releaseLock();
 
         memoryLock.getLock();
-        delete(db);
+        delete (db);
         memoryLock.releaseLock();
 
-
         memoryLock.getLock();
-        db_zones = new DatabaseHandler(address, 3306, user, password, std::string("vpn_zones"));
+        db_zones = new DatabaseHandler(address, 3306, user, password,
+                                       std::string("vpn_zones"));
         memoryLock.releaseLock();
 
         memoryLock.getLock();
@@ -428,7 +428,35 @@ void requestManager() {
         };
 
         memoryLock.getLock();
-        delete(db_zones);
+        delete (db_zones);
+        memoryLock.releaseLock();
+
+        if (providers.size() == 1) {
+          selectedProvider = providers[0];
+        } else {
+          srand(time(NULL));
+          providerRandomId = rand() % (providers.size());
+          selectedProvider = providers[providerRandomId];
+        }
+
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(selected_provider_string);
+        memoryLock.releaseLock();
+
+        managerLogQueue.Enqueue(log);
+
+        memoryLock.getLock();
+        log.reset();
+        memoryLock.releaseLock();
+
+        memoryLock.getLock();
+        log = boost::make_shared<std::string>(selectedProvider);
+        memoryLock.releaseLock();
+
+        managerLogQueue.Enqueue(log);
+
+        memoryLock.getLock();
+        log.reset();
         memoryLock.releaseLock();
 
         memoryLock.getLock();
@@ -443,16 +471,31 @@ void requestManager() {
 
         memoryLock.getLock();
         server = CreateServer(selectedProvider, token);
-        memoryLock.getLock();
-
-        memoryLock.getLock();
-        server->setZone(zone);
-        server->setServerName(*severName);
         memoryLock.releaseLock();
 
-        curlLock.getLock();
-        server->create();
-        curlLock.releaseLock();
+        if (!server) {
+          std::cerr << "Server object not created. Aborting." << std::endl;
+          // Notify error
+        } else {
+          memoryLock.getLock();
+          server->setZone(zone);
+          server->setServerName(*severName);
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          server->create();
+          memoryLock.releaseLock();
+
+          memoryLock->getLock();
+          log = boost::make_shared<std::string>(server_created_string);
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
+          memoryLock->getLock();
+          log.reset();
+          memoryLock.releaseLock();
+        }
       }
 
     } else { // Server Request is not correct
@@ -514,10 +557,12 @@ void requestManager() {
        database);
               db->updateDBField(token, std::string("name"),
        std::string("string"), severName);
-              db->updateDBField(token, std::string("name"),std::string("string"), severName);
+              db->updateDBField(token,
+       std::string("name"),std::string("string"), severName);
               free(db);
 
-              db_zones = new DatabaseHandler(address, 3306, user, password, std::string("vpn_zones"));
+              db_zones = new DatabaseHandler(address, 3306, user, password,
+       std::string("vpn_zones"));
               providers = db_zones->getProvidersFromZone(zone);
 
               log = std::string("Providers: ");

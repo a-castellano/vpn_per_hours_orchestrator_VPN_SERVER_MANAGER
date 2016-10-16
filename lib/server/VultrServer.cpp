@@ -6,8 +6,8 @@
 #include "VultrServer.h"
 
 #include <curl/curl.h>
-#include <sstream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 
 #include <boost/property_tree/json_parser.hpp>
@@ -15,7 +15,8 @@
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
-VultrServer::VultrServer(boost::shared_ptr<std::string> token) : Server(token) {}
+VultrServer::VultrServer(boost::shared_ptr<std::string> token)
+    : Server(token) {}
 
 const std::string VultrServer::serverType(void) { return std::string("Vultr"); }
 
@@ -48,9 +49,7 @@ bool VultrServer::curlGET(const std::string &url, std::stringstream &result) {
   std::stringstream header;
   std::ostringstream os;
   curl = curl_easy_init();
-
   struct curl_slist *chunk = NULL;
-
   if (curl) {
     header << "API-Key: " << VULTR_API_KEY;
     chunk = curl_slist_append(chunk, header.str().c_str());
@@ -61,7 +60,7 @@ bool VultrServer::curlGET(const std::string &url, std::stringstream &result) {
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-    //curl_easy_setopt(curl, CURLOPT_DNS_CACHE_TIMEOUT, -1); 
+    // curl_easy_setopt(curl, CURLOPT_DNS_CACHE_TIMEOUT, -1);
     curl_easy_setopt(curl, CURLOPT_DNS_LOCAL_IP4, "8.8.8.8");
     curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
@@ -76,9 +75,9 @@ bool VultrServer::curlGET(const std::string &url, std::stringstream &result) {
       return false;
     }
 
-    //curl_easy_cleanup(curl);
+    // curl_easy_cleanup(curl);
     curl_slist_free_all(chunk);
-		curl_easy_cleanup(curl);
+    curl_easy_cleanup(curl);
     result.str("");
     result << os.str();
   }
@@ -109,7 +108,7 @@ bool VultrServer::curlPOST(const std::string &url, const std::string &POSTdata,
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
     curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
-    //curl_easy_setopt(curl, CURLOPT_DNS_CACHE_TIMEOUT, -1); 
+    // curl_easy_setopt(curl, CURLOPT_DNS_CACHE_TIMEOUT, -1);
     curl_easy_setopt(curl, CURLOPT_DNS_LOCAL_IP4, "8.8.8.8");
     curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     curl_easy_setopt(curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTPS);
@@ -124,9 +123,8 @@ bool VultrServer::curlPOST(const std::string &url, const std::string &POSTdata,
       return false;
     }
 
-    
     curl_slist_free_all(chunk);
-		curl_easy_cleanup(curl);  
+    curl_easy_cleanup(curl);
     result.str("");
     result << os.str();
   }
@@ -156,19 +154,20 @@ bool VultrServer::create() {
   std::string createServerPOSTdata;
   std::stringstream serverJSONSUBID;
 
-	std::string serverSUBID;
+  std::string serverSUBID;
 
-	boost::property_tree::ptree jsonCreateServer;
+  boost::property_tree::ptree jsonCreateServer;
 
-	std::string createServerIPRequest;
-	std::stringstream serverJSONIP;
+  std::string createServerIPRequest;
+  std::stringstream serverJSONIP;
 
-	boost::property_tree::ptree ipv4;
+  boost::property_tree::ptree ipv4;
 
-	std::string serverIP;
+  std::string serverIP;
 
+  std::string regions_list_string("https://api.vultr.com/v1/regions/list");
 
-  if (curlGET(std::string("https://api.vultr.com/v1/regions/list"), json)) {
+  if (curlGET(regions_list_string, json)) {
     zone_name = zoneName();
     boost::property_tree::read_json(json, regions);
 
@@ -191,7 +190,7 @@ bool VultrServer::create() {
     } // for
     // Select one DCID
     if (currentDCID.size() == 0) {
-			std::cout<<"NO HAY ZONAS "<<std::endl; 
+      std::cout << "NO HAY ZONAS " << std::endl;
       return false; // and write and erro msg
     } else {
       if (currentDCID.size() == 1) {
@@ -206,35 +205,37 @@ bool VultrServer::create() {
     // first test
     createServerRequest = std::string("https://api.vultr.com/v1/server/create");
     createServerPOSTdata =
-        std::string("VPSPLANID=29&OSID=160&SSHKEYID=56d08c10951a6&label=") + this->getServerName() + std::string("&DCID=") +
-        std::string(DCID);
+        std::string("VPSPLANID=29&OSID=160&SSHKEYID=56d08c10951a6&label=") +
+        this->getServerName() + std::string("&DCID=") + std::string(DCID);
 
     if (curlPOST(createServerRequest, createServerPOSTdata, serverJSONSUBID)) {
-			boost::property_tree::read_json(serverJSONSUBID, jsonCreateServer);
-			serverSUBID = std::string(jsonCreateServer.get_child("SUBID").data());
-			setMachineID(serverSUBID);
-			setTrueZone(std::string(DCID));
-			createServerIPRequest = std::string("https://api.vultr.com/v1/server/list_ipv4?SUBID=") + getMachineID();
+      boost::property_tree::read_json(serverJSONSUBID, jsonCreateServer);
+      serverSUBID = std::string(jsonCreateServer.get_child("SUBID").data());
+      setMachineID(serverSUBID);
+      setTrueZone(std::string(DCID));
+      createServerIPRequest =
+          std::string("https://api.vultr.com/v1/server/list_ipv4?SUBID=") +
+          getMachineID();
 
-			if (curlGET(createServerIPRequest, serverJSONIP))
-			{
-				boost::property_tree::read_json(serverJSONIP, ipv4);
-				
-				serverIP = std::string( ipv4.get_child(getMachineID().c_str()).begin()->second.get<std::string>("ip") );
-				while(serverIP=="0")
-			 	{
-					if (curlGET(createServerIPRequest, serverJSONIP)) 
-					{
-						boost::property_tree::read_json(serverJSONIP, ipv4);
-						serverIP = std::string( ipv4.get_child(getMachineID().c_str()).begin()->second.get<std::string>("ip") );
-					}
-				}
-				setServerIP(std::string( serverIP ));
-			}
+      if (curlGET(createServerIPRequest, serverJSONIP)) {
+        boost::property_tree::read_json(serverJSONIP, ipv4);
+
+        serverIP = std::string(ipv4.get_child(getMachineID().c_str())
+                                   .begin()
+                                   ->second.get<std::string>("ip"));
+        while (serverIP == "0") {
+          if (curlGET(createServerIPRequest, serverJSONIP)) {
+            boost::property_tree::read_json(serverJSONIP, ipv4);
+            serverIP = std::string(ipv4.get_child(getMachineID().c_str())
+                                       .begin()
+                                       ->second.get<std::string>("ip"));
+          }
+        }
+        setServerIP(std::string(serverIP));
+      }
+    } else {
+      return false;
     }
-		else{
-			return false;
-		}
   }
   return true;
 }

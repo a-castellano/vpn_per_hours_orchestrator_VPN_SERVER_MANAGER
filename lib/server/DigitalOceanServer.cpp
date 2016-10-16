@@ -13,11 +13,9 @@ const std::string DigitalOceanServer::serverType() {
   return std::string("DigitalOcean");
 }
 
-DigitalOceanServer::~DigitalOceanServer(){}
+DigitalOceanServer::~DigitalOceanServer() {}
 
-    bool DigitalOceanServer::create() {
-  return true;
-}
+bool DigitalOceanServer::create() { return true; }
 
 bool DigitalOceanServer::destroy() { return true; }
 

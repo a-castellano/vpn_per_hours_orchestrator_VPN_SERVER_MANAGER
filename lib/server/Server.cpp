@@ -5,81 +5,41 @@
 #include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
-Server::Server(boost::shared_ptr<std::string> token)
-:token(*token)
-{}
+Server::Server(boost::shared_ptr<std::string> token) : token(*token) {}
 
-const std::string Server::getToken( void )
-{
-	return token;
+const std::string Server::getToken(void) { return token; }
+
+const unsigned int Server::getZone(void) { return zone; }
+
+const std::string Server::serverType(void) { return std::string("None"); }
+
+void Server::setZone(const unsigned int &zone) { this->zone = zone; }
+
+size_t Server::data_write(void *buf, size_t size, size_t nmemb, void *userp) {
+  if (userp) {
+    std::ostream &os = *static_cast<std::ostream *>(userp);
+    std::streamsize len = size * nmemb;
+    if (os.write(static_cast<char *>(buf), len))
+      return len;
+  }
+
+  return 0;
 }
 
-const unsigned int Server::getZone( void )
-{
-return zone;
-}
+void Server::setMachineID(const std::string &id) { machineID = id; }
 
-const std::string Server::serverType( void )
-{
-        return std::string("None");
-}
+std::string Server::getMachineID() { return machineID; }
 
-void Server::setZone(const unsigned int & zone)
-{
-	this->zone = zone;
-}
+void Server::setServerIP(const std::string &ip) { serverIP = ip; }
 
-size_t Server::data_write(void* buf, size_t size, size_t nmemb, void* userp)
-{
-	if(userp)
-			{
-						std::ostream& os = *static_cast<std::ostream*>(userp);
-								std::streamsize len = size * nmemb;
-										if(os.write(static_cast<char*>(buf), len))
-														return len;
-											}
+std::string Server::getServerIP() { return serverIP; }
 
-		return 0;
-}
+void Server::setServerName(const std::string &name) { serverName = name; }
+std::string Server::getServerName() { return serverName; }
 
-void Server::setMachineID(const std::string &id)
-{
-	machineID = id;
-}
+void Server::setTrueZone(const std::string &zone) { realZone = zone; }
 
-std::string Server::getMachineID()
-{
-	return machineID;
-}
-
-void Server::setServerIP(const std::string &ip)
-{
-	serverIP = ip;
-}
-
-std::string Server::getServerIP()
-{
-	return serverIP;
-}
-
-void Server::setServerName(const std::string &name)
-{
-	serverName = name;
-}
-std::string Server::getServerName()
-{
-	return serverName;
-}
-
-void Server::setTrueZone(const std::string &zone)
-{
-	realZone = zone;
-}
-
-std::string Server::getTrueZone()
-{
-	return realZone;
-}
+std::string Server::getTrueZone() { return realZone; }
 
 Server::~Server() {}
 
