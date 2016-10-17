@@ -286,6 +286,7 @@ void requestManager() {
   std::string providersTitle = std::string("Providers:");
   std::string selected_provider_string = std::string("Selected provider");
   std::string creating_server_string = std::string("Creating server.");
+  std::string setting_up_string = std::string("Setting up server.");
   std::string server_created_string = std::string("Server created.");
 
   memoryLock.getLock();
@@ -515,7 +516,61 @@ void requestManager() {
 
           managerLogQueue.Enqueue(log);
 
+          memoryLock.getLock();
+          log.reset();
           memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(ip_field + std::string(": ") + std::string(server->getServerIP()));
+          db->updateDBField(token, ip_field, string_type, server->getServerIP());
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
+          memoryLock.getLock();
+          log.reset();
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(true_zone_field + std::string(": ") + std::string(server->getTrueZone()));
+          db->updateDBField(token, machine_id_field, string_type, server->getTrueZone());
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
+          memoryLock.getLock();
+          log.reset();
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(provider_field + std::string(": ") + std::string(selectedProvider));
+          db->updateDBField(token, provider_field, string_type, selectedProvider);
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
+          memoryLock.getLock();
+          log.reset();
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(status_field + std::string(": ") + std::string(setting_up_string));
+          db->updateDBField(token, status_field, string_type, setting_up_string);
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
+          memoryLock.getLock();
+          log.reset();
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          delete (db);
+          memoryLock.releaseLock();
+
+
+          //Ansible
+
         }
       }
 
