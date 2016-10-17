@@ -242,7 +242,7 @@ boost::shared_ptr<std::string> DatabaseHandler::setServerName(boost::shared_ptr<
 	return finalURL;
 	} //DatabaseHandler::setServerName
 
-bool DatabaseHandler::updateDBField(boost::shared_ptr<std::string> token, const std::string &field, const std::string &type ,boost::shared_ptr<std::string> value) 
+bool DatabaseHandler::updateDBField(boost::shared_ptr<std::string> token, const std::string &field, const std::string &type ,boost::shared_ptr<std::string> value)
 {
 	std::stringstream query;
 	if (type == std::string("string"))
@@ -260,6 +260,18 @@ bool DatabaseHandler::updateDBField(boost::shared_ptr<std::string> token, const 
 	}
 	disconnect();
 	return true;
+}
+
+bool DatabaseHandler::updateDBField( boost::shared_ptr<std::string> token, const std::string &field, const std::string &type ,const std::string & value )
+{
+  boost::shared_ptr<std::string> value_pointer;
+  bool toReturn;
+
+  value_pointer = boost::make_shared<std::string>(value);
+  toReturn = this->updateDBField(token, field, type, value_pointer);
+  value_pointer.reset();
+
+  return toReturn;
 }
 
 std::vector<unsigned int> DatabaseHandler::getVPNUsers(const std::string & token)

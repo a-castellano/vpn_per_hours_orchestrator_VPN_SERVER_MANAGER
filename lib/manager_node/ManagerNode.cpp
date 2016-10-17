@@ -264,7 +264,14 @@ void requestManager() {
 
   // Database variables
   std::string string_type("string");
+  std::string integer_type("integer");
+
   std::string name_field("name");
+  std::string machine_id_field("machine_id");
+  std::string ip_field("ip");
+  std::string true_zone_field("true_zone");
+  std::string provider_field("provider");
+  std::string status_field("status");
 
   // ServerRequest variables
   boost::shared_ptr<std::string> command;
@@ -494,6 +501,20 @@ void requestManager() {
 
           memoryLock.getLock();
           log.reset();
+          memoryLock.releaseLock();
+
+          //Updating db fields
+          memoryLock.getLock();
+          db = new DatabaseHandler(address, 3306, user, password, database);
+          memoryLock.releaseLock();
+
+          memoryLock.getLock();
+          log = boost::make_shared<std::string>(machine_id_field + std::string(": ") + std::string(server->getMachineID()));
+          db->updateDBField(token, machine_id_field, integer_type, server->getMachineID());
+          memoryLock.releaseLock();
+
+          managerLogQueue.Enqueue(log);
+
           memoryLock.releaseLock();
         }
       }
