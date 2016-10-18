@@ -54,7 +54,7 @@ AnsibleHandler::AnsibleHandler(boost::shared_ptr<std::string> token,
     this->filename = this->filename + std::string("0");
     memoryLock.releaseLock();
   }
-
+  
   memoryLock.getLock();
   this->filename =
       this->filename + std::to_string(ltm->tm_mday) + std::string("_");
@@ -70,7 +70,7 @@ AnsibleHandler::AnsibleHandler(boost::shared_ptr<std::string> token,
   this->filename =
       this->filename + std::to_string(ltm->tm_hour) + std::string(":");
   memoryLock.releaseLock();
-
+  
   if (ltm->tm_min < 10) {
     memoryLock.getLock();
     this->filename = filename + std::string("0");

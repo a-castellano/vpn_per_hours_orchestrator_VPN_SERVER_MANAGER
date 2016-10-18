@@ -541,7 +541,7 @@ void requestManager() {
 
           memoryLock.getLock();
           log = boost::make_shared<std::string>(true_zone_field + std::string(": ") + std::string(server->getTrueZone()));
-          db->updateDBField(token, machine_id_field, string_type, server->getTrueZone());
+          db->updateDBField(token, true_zone_field, string_type, server->getTrueZone());
           memoryLock.releaseLock();
 
           managerLogQueue.Enqueue(log);
@@ -572,9 +572,14 @@ void requestManager() {
           log.reset();
           memoryLock.releaseLock();
 
-          // Ansible
-          memoryLock.getLock();
+          // Ansible uses memoryLock too
           ansible = new AnsibleHandler(token, db, *serverIP);
+
+          // Ansible run is using memoryLock
+          ansible->run();
+
+          memoryLock.getLock();
+          delete (ansible);
           memoryLock.releaseLock();
 
           memoryLock.getLock();
