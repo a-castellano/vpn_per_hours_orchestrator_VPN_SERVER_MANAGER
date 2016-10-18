@@ -27,6 +27,7 @@
 #include <ServerFactory.h>
 #include <ServerRequest.h>
 #include <VPNLock.h>
+#include <AnsibleHandler.h>
 
 extern VPNQueue processerLogQueue;
 extern VPNQueue managerQueue;
@@ -288,6 +289,9 @@ void requestManager() {
   std::string creating_server_string = std::string("Creating server.");
   std::string setting_up_string = std::string("Setting up server.");
   std::string server_created_string = std::string("Server created.");
+
+  // Ansible
+  AnsibleHandler *ansible;
 
   memoryLock.getLock();
   log = boost::make_shared<std::string>(noPointerStarted);

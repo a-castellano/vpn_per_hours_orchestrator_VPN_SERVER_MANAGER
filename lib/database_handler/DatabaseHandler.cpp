@@ -1,8 +1,10 @@
 // DatabaseHandler.cpp
 // Álvaro Castellano Vela 24/02/2016
 
-#define BOOST_SP_USE_QUICK_ALLOCATOR 
+#define BOOST_SP_USE_QUICK_ALLOCATOR
+#ifndef DATABASEHANDLER
 #include "DatabaseHandler.h"
+#endif
 
 #include <string>
 #include <vector>

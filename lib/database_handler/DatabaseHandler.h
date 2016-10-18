@@ -1,6 +1,9 @@
 // DatabaseHandler.h
 // Álvaro Castellano Vela 24/02/2016
 
+#ifndef DATABASEHANDLER
+#define DATABASEHANDLER
+
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
 #include <cppconn/prepared_statement.h>
@@ -65,3 +68,5 @@ private:
   std::string zone_initials[10] = {"",    "usa", "ger", "sgp", "uk",
                                    "net", "can", "fra", "jap", "au"};
 };
+
+#endif
