@@ -27,6 +27,7 @@
 #include <ServerFactory.h>
 #include <ServerRequest.h>
 #include <VPNLock.h>
+#include <VPNQueue.h>
 #include <AnsibleHandler.h>
 
 extern VPNQueue processerLogQueue;
@@ -36,7 +37,7 @@ extern VPNLock memoryLock;
 extern VPNLock curlLock;
 // Functions
 
-void VPNQueue::Enqueue(const boost::shared_ptr<std::string> &request) {
+/*void VPNQueue::Enqueue(const boost::shared_ptr<std::string> &request) {
   r_mutex.lock();
   r_queue.push(request);
   r_mutex.unlock();
@@ -63,6 +64,7 @@ bool VPNQueue::empty() {
   r_mutex.unlock();
   return is_empty;
 }
+*/
 
 /*
  *

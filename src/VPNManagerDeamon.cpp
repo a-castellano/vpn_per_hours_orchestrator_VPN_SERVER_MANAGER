@@ -12,6 +12,7 @@
 // Project libraries
 #include <ManagerNode.h>
 #include <VPNLock.h>
+#include <VPNQueue.h>
 
 using namespace std;
 

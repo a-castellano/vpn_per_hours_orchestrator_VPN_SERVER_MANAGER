@@ -40,6 +40,7 @@ INCLUDE_DIRECTORIES(lib/server)
 INCLUDE_DIRECTORIES(lib/server_pointer)
 INCLUDE_DIRECTORIES(lib/ssh_tester)
 INCLUDE_DIRECTORIES(lib/vpn_lock)
+INCLUDE_DIRECTORIES(lib/vpn_queue)
 INCLUDE_DIRECTORIES(lib/manager_node)
 INCLUDE_DIRECTORIES(lib/ansible_handler)
 
@@ -64,13 +65,13 @@ ADD_EXECUTABLE( pointer_test src/server_pointer.cpp lib/server_pointer/ServerPoi
 TARGET_LINK_LIBRARIES( pointer_test ${CONAN_LIBS})
 
 ADD_EXECUTABLE( ssh_test src/ssh_test.cpp lib/ssh_tester/sshTester.cpp )
-TARGET_LINK_LIBRARIES( ssh_test ${CONAN_LIBS} ssh) 
+TARGET_LINK_LIBRARIES( ssh_test ${CONAN_LIBS} ssh)
 
 #ADD_EXECUTABLE( http_test src/http_server_test.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
 #  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/server_request/ServerRequest.cpp
-#  lib/database_handler/DatabaseHandler.cpp  lib/server_pointer/ServerPointer.cpp 
+#  lib/database_handler/DatabaseHandler.cpp  lib/server_pointer/ServerPointer.cpp
 #  lib/ssh_tester/sshTester.cpp )
-#TARGET_LINK_LIBRARIES( http_test ${CONAN_LIBS}   mysqlcppconn ssh pthread  ) 
+#TARGET_LINK_LIBRARIES( http_test ${CONAN_LIBS}   mysqlcppconn ssh pthread  )
 
 #ADD_EXECUTABLE( main_server_test src/main_server.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
 #   lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/server_request/ServerRequest.cpp
@@ -84,12 +85,11 @@ TARGET_LINK_LIBRARIES( ssh_test ${CONAN_LIBS} ssh)
 #  lib/ssh_tester/sshTester.cpp )
 #TARGET_LINK_LIBRARIES( socket_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT}  mysqlcppconn ssh )
 
-ADD_EXECUTABLE( VPNManagerDaemon src/VPNManagerDeamon.cpp lib/manager_node/ManagerNode.cpp
+ADD_EXECUTABLE( VPNManagerDaemon src/VPNManagerDeamon.cpp lib/vpn_lock/VPNLock.cpp lib/vpn_queue/VPNQueue.cpp 
+  lib/manager_node/ManagerNode.cpp
   lib/server_request/ServerRequest.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
   lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/database_handler/DatabaseHandler.cpp
-  lib/server_pointer/ServerPointer.cpp lib/ssh_tester/sshTester.cpp 
-  lib/vpn_lock/VPNLock.cpp
-  lib/ansible_handler/AnsibleHandler.cpp )
+  lib/server_pointer/ServerPointer.cpp lib/ssh_tester/sshTester.cpp  lib/ansible_handler/AnsibleHandler.cpp )
 TARGET_LINK_LIBRARIES( VPNManagerDaemon ${CONAN_LIBS}  mysqlcppconn ssh )
 
 
