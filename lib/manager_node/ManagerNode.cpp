@@ -282,6 +282,7 @@ void requestManager() {
 
   // Server variables
   boost::shared_ptr<std::string> severName;
+  boost::shared_ptr<std::string> serverIP;
 
   // Log variables
   boost::shared_ptr<std::string> log;
@@ -529,6 +530,7 @@ void requestManager() {
           memoryLock.getLock();
           log = boost::make_shared<std::string>(ip_field + std::string(": ") + std::string(server->getServerIP()));
           db->updateDBField(token, ip_field, string_type, server->getServerIP());
+          serverIP = boost::make_shared<std::string>(server->getServerIP());
           memoryLock.releaseLock();
 
           managerLogQueue.Enqueue(log);
@@ -570,12 +572,14 @@ void requestManager() {
           log.reset();
           memoryLock.releaseLock();
 
+          // Ansible
+          memoryLock.getLock();
+          ansible = new AnsibleHandler(token, db, *serverIP);
+          memoryLock.releaseLock();
+
           memoryLock.getLock();
           delete (db);
           memoryLock.releaseLock();
-
-
-          //Ansible
 
         }
       }
