@@ -50,7 +50,7 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache .
+$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
 ```
 
 
@@ -58,7 +58,7 @@ Using Clang
 ```
 $ export CC=/usr/bin/clang
 $ export CXX=/usr/bin/clang++
-$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache .
+$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
 ```
 
 #### Debian 8
@@ -68,14 +68,14 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache .
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
 ```
 
 Using Clang
 ```
 $ export CC=/usr/bin/clang
 $ export CXX=/usr/bin/clang++
-$ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache .
+$ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
 ```
 
 ### Build
@@ -118,4 +118,4 @@ echo 128000 > /proc/sys/vm/max_map_count
 
 ## TODO
 
-This node is not going to the multi trhead. It will be an single dockerized node. The more nodes the system needs, the more docker will be deployed.
+Dockerize this manager
