@@ -50,7 +50,7 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
+$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing cmake-spacify-list cmake-imported-project .
 ```
 
 
@@ -58,7 +58,7 @@ Using Clang
 ```
 $ export CC=/usr/bin/clang
 $ export CXX=/usr/bin/clang++
-$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
+$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing cmake-spacify-list cmake-imported-project .
 ```
 
 #### Debian 8
@@ -68,14 +68,14 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing cmake-spacify-list cmake-imported-project .
 ```
 
 Using Clang
 ```
 $ export CC=/usr/bin/clang
 $ export CXX=/usr/bin/clang++
-$ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing .
+$ conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard cmake-forward-cache cmake-header-language cmake-opt-arg-parsing cmake-spacify-list cmake-imported-project .
 ```
 
 ### Build
