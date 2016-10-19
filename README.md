@@ -68,7 +68,7 @@ Using conan we need to specify which compiler is going to be used its version, a
 $ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
 $ git checkout {{CURRENT_BRANCH}}
 $ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost .
+$ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost gmock-cmake cmake-include-guard .
 ```
 
 Using Clang
