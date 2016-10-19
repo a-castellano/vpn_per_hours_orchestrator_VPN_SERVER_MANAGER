@@ -8,3 +8,4 @@ bin
 cmake_install.cmake
 tags
 *.swp
+*.gcov
