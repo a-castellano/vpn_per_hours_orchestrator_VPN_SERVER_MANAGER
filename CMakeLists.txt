@@ -11,7 +11,7 @@ SET (CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
 
 SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
 SET (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
-SET (CMAKE_CXX_FLAGS_DEBUG          "-g")
+SET (CMAKE_CXX_FLAGS_DEBUG          "-g --coverage -O0")
 SET (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 SET (CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
 SET (CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -21,7 +21,7 @@ SET (CMAKE_LINKER  "/usr/bin/llvm-ld")
 SET (CMAKE_NM      "/usr/bin/llvm-nm")
 SET (CMAKE_OBJDUMP "/usr/bin/llvm-objdump")
 SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
-SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wunused-variable -Wreturn-type  -fsanitize=undefined")
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 include(conanbuildinfo.cmake)
@@ -51,39 +51,15 @@ ADD_EXECUTABLE( server_request_test tests/server_request_test.cpp lib/server_req
           lib/vpn_lock/VPNLock.cpp )
 TARGET_LINK_LIBRARIES( server_request_test ${CONAN_LIBS} )
 
-#ADD_EXECUTABLE( mysql_test src/mysql_test.cpp lib/database_handler/DatabaseHandler.cpp )
-#TARGET_LINK_LIBRARIES( mysql_test ${CONAN_LIBS} mysqlcppconn )
-
-#ADD_EXECUTABLE( log_test src/log_test.cpp lib/log/Log.cpp lib/log/Logger.cpp )
-#TARGET_LINK_LIBRARIES( log_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT} )
-
-#ADD_EXECUTABLE( server_test src/server_test.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
-#  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp )
-#TARGET_LINK_LIBRARIES( server_test ${CONAN_LIBS})
+ADD_EXECUTABLE( ansible_test tests/ansible_test.cpp lib/vpn_lock/VPNLock.cpp lib/vpn_queue/VPNQueue.cpp lib/server/Server.cpp
+  lib/database_handler/DatabaseHandler.cpp lib/ansible_handler/AnsibleHandler.cpp )
+TARGET_LINK_LIBRARIES( ansible_test ${CONAN_LIBS} mysqlcppconn )
 
 ADD_EXECUTABLE( pointer_test src/server_pointer.cpp lib/server_pointer/ServerPointer.cpp )
 TARGET_LINK_LIBRARIES( pointer_test ${CONAN_LIBS})
 
 ADD_EXECUTABLE( ssh_test src/ssh_test.cpp lib/ssh_tester/sshTester.cpp )
 TARGET_LINK_LIBRARIES( ssh_test ${CONAN_LIBS} ssh)
-
-#ADD_EXECUTABLE( http_test src/http_server_test.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
-#  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/server_request/ServerRequest.cpp
-#  lib/database_handler/DatabaseHandler.cpp  lib/server_pointer/ServerPointer.cpp
-#  lib/ssh_tester/sshTester.cpp )
-#TARGET_LINK_LIBRARIES( http_test ${CONAN_LIBS}   mysqlcppconn ssh pthread  )
-
-#ADD_EXECUTABLE( main_server_test src/main_server.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
-#   lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/server_request/ServerRequest.cpp
-#   lib/database_handler/DatabaseHandler.cpp lib/log/Log.cpp lib/log/Logger.cpp lib/server_pointer/ServerPointer.cpp
-#   lib/ssh_tester/sshTester.cpp )
-#TARGET_LINK_LIBRARIES( main_server_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT}  mysqlcppconn ssh )
-
-#ADD_EXECUTABLE( socket_test src/socket_server.cpp lib/server/Server.cpp lib/server/DigitalOceanServer.cpp
-#  lib/server/VultrServer.cpp lib/server/ServerFactory.cpp lib/server_request/ServerRequest.cpp
-#  lib/database_handler/DatabaseHandler.cpp lib/log/Log.cpp lib/log/Logger.cpp lib/server_pointer/ServerPointer.cpp
-#  lib/ssh_tester/sshTester.cpp )
-#TARGET_LINK_LIBRARIES( socket_test ${CONAN_LIBS} ${CMAKE_THREAD_LIBS_INIT}  mysqlcppconn ssh )
 
 ADD_EXECUTABLE( VPNManagerDaemon src/VPNManagerDeamon.cpp lib/vpn_lock/VPNLock.cpp lib/vpn_queue/VPNQueue.cpp 
   lib/manager_node/ManagerNode.cpp
@@ -94,4 +70,4 @@ TARGET_LINK_LIBRARIES( VPNManagerDaemon ${CONAN_LIBS}  mysqlcppconn ssh )
 
 
 add_test(NAME server_request COMMAND ./bin/server_request_test )
-
+add_test(NAME ansible COMMAND ./bin/ansible_test )

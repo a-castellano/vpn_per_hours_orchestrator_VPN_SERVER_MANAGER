@@ -2,8 +2,6 @@
 Boost/1.60.0@lasote/stable
 libcurl/7.47.1@lasote/stable
 bzip2/1.0.6@lasote/stable
-cmake-forward-cache/master@smspillaz/cmake-forward-cache
-cmake-include-guard/master@smspillaz/cmake-include-guard
-gmock-cmake/master@smspillaz/gmock-cmake
+googlemock/1.7.0@azriel91/stable-1
 [generators]
 cmake

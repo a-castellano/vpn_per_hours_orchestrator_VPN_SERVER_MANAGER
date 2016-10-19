@@ -210,4 +210,6 @@ bool AnsibleHandler::run() {
   memoryLock.getLock();
   log = boost::make_shared<std::string>(waiting_server_string);
   memoryLock.releaseLock();
+
+  return true;
 }

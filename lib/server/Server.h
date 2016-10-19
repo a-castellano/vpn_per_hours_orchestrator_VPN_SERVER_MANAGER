@@ -15,6 +15,7 @@
 
 class Server {
 public:
+
   Server(boost::shared_ptr<std::string>);
 
   virtual bool create() = 0;
@@ -43,7 +44,6 @@ public:
 
   void setVpnGroups(const std::vector<std::string> &);
 
-  // this function should be private
   ~Server();
 
 private:
