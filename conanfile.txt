@@ -5,8 +5,5 @@ bzip2/1.0.6@lasote/stable
 cmake-forward-cache/master@smspillaz/cmake-forward-cache
 cmake-include-guard/master@smspillaz/cmake-include-guard
 gmock-cmake/master@smspillaz/gmock-cmake
-cmake-header-language/master@smspillaz/cmake-header-language
-cmake-opt-arg-parsing/master@smspillaz/cmake-opt-arg-parsing
-cmake-spacify-list/master@smspillaz/cmake-spacify-list
 [generators]
 cmake
