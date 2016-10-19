@@ -37,7 +37,10 @@ Installing required packages using pip
 
 ## Building the project
 
-
+### Using conana for searching packages
+```
+conan search PACKAGE_NAME -r conan.io 
+```
 ### C++ vpnServerManager
 
 #### Ubuntu 16.04
