@@ -1,14 +1,14 @@
 project(VPN)
 cmake_minimum_required(VERSION 3.0)
 
-SET (CMAKE_C_COMPILER             "/usr/bin/clang")
+SET (CMAKE_C_COMPILER             "/usr/bin/gcc")
 SET (CMAKE_C_FLAGS                "-Wall -std=c99")
 SET (CMAKE_C_FLAGS_DEBUG          "-g -fprofile-arcs -ftest-coverage -O0")
 SET (CMAKE_C_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 SET (CMAKE_C_FLAGS_RELEASE        "-O4 -DNDEBUG")
 SET (CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
 
-SET (CMAKE_CXX_COMPILER             "/usr/bin/clang++")
+SET (CMAKE_CXX_COMPILER             "/usr/bin/g++")
 SET (CMAKE_CXX_FLAGS                "-Wall -std=c++11")
 SET (CMAKE_CXX_FLAGS_DEBUG          "-g --coverage -O0")
 SET (CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
