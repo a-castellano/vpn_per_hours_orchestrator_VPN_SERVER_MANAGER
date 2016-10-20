@@ -24,7 +24,6 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 INCLUDE(conanbuildinfo.cmake)
-INCLUDE(CodeCoverage.cmake)
 
 CONAN_BASIC_SETUP()
 
@@ -73,8 +72,8 @@ TARGET_LINK_LIBRARIES( VPNManagerDaemon ${CONAN_LIBS}  mysqlcppconn ssh )
 add_test(NAME server_request COMMAND ./bin/server_request_test )
 add_test(NAME ansible_test COMMAND ./bin/ansible_test )
 
-SETUP_TARGET_FOR_COVERAGE(
-        ansible_coverage
-        bin/ansible_test
-        coverage
-        )
+#SETUP_TARGET_FOR_COVERAGE(
+#        ansible_coverage
+#        bin/ansible_test
+#        coverage
+#)
