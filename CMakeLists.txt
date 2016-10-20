@@ -1,6 +1,5 @@
-project(HTTP_test)
+project(VPN)
 cmake_minimum_required(VERSION 3.0)
-
 
 SET (CMAKE_C_COMPILER             "/usr/bin/clang")
 SET (CMAKE_C_FLAGS                "-Wall -std=c99")
@@ -24,7 +23,9 @@ SET (CMAKE_RANLIB  "/usr/bin/llvm-ranlib")
 SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=undefined")
 SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
-include(conanbuildinfo.cmake)
+INCLUDE(conanbuildinfo.cmake)
+INCLUDE(CodeCoverage.cmake)
+
 CONAN_BASIC_SETUP()
 
 find_package(Threads)
@@ -70,4 +71,10 @@ TARGET_LINK_LIBRARIES( VPNManagerDaemon ${CONAN_LIBS}  mysqlcppconn ssh )
 
 
 add_test(NAME server_request COMMAND ./bin/server_request_test )
-add_test(NAME ansible COMMAND ./bin/ansible_test )
+add_test(NAME ansible_test COMMAND ./bin/ansible_test )
+
+SETUP_TARGET_FOR_COVERAGE(
+        my_coverage_target ansible_test
+        test_driver ansible_test
+        coverage ansible_coverage
+        )
