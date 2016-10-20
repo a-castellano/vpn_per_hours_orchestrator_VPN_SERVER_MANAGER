@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 SET (CMAKE_C_COMPILER             "/usr/bin/clang")
 SET (CMAKE_C_FLAGS                "-Wall -std=c99")
-SET (CMAKE_C_FLAGS_DEBUG          "-g")
+SET (CMAKE_C_FLAGS_DEBUG          "-g -fprofile-arcs -ftest-coverage -O0")
 SET (CMAKE_C_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 SET (CMAKE_C_FLAGS_RELEASE        "-O4 -DNDEBUG")
 SET (CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -74,7 +74,7 @@ add_test(NAME server_request COMMAND ./bin/server_request_test )
 add_test(NAME ansible_test COMMAND ./bin/ansible_test )
 
 SETUP_TARGET_FOR_COVERAGE(
-        my_coverage_target ansible_test
-        test_driver ansible_test
-        coverage ansible_coverage
+        ansible_coverage
+        bin/ansible_test
+        coverage
         )
