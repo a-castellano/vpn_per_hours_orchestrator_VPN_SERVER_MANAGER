@@ -91,6 +91,10 @@ cmake -DCMAKE_BUILD_TYPE=Release .
 $ make
 ```
 
+## Cleaning the project
+```
+$ rm -r CMakeCache.txt cmake_install.cmake conanbuildinfo.cmake conaninfo.txt CTestTestfile.cmake Makefile 
+```
 ## Debuging
 ```
 lldb-3.8 ./bin/VPNManagerDaemon
