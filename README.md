@@ -11,21 +11,6 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 
 #### Adding Debian testing repo
 
-Create a file named */etc/apt/sources.list.d/testing.list*
-```
-deb http://ftp.us.debian.org/debian testing main contrib non-free
-```
-
-
-
-#### Adding Clang 3.9 repos
-
-Create a file named */etc/apt/sources.list.d/llvm-jessie.list*
-```
-deb http://apt.llvm.org/jessie/ llvm-toolchain-jessie-3.9 main
-deb-src http://apt.llvm.org/jessie/ llvm-toolchain-jessie-3.9 main
-```
-
 Install required packages using apt-get
 
 ```
@@ -58,8 +43,8 @@ conan install -s compiler=gcc -s compiler.version=4.9 -s compiler.libcxx=libstdc
 
 Using Clang
 ```
-sudo ln -s /usr/bin/clang-3.9 /usr/bin/clang
-sudo ln -s /usr/bin/clang++-3.9 /usr/bin/clang++
+sudo ln -s /usr/bin/clang-3.8 /usr/bin/clang
+sudo ln -s /usr/bin/clang++-3.8 /usr/bin/clang++
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost googlemock googletest  .
