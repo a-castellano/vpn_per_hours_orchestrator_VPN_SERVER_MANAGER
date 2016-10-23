@@ -7,25 +7,20 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 
 ## Install project dependencies
 
-### Ubuntu 16.04
-
-Install required packages using apt-get
-
-```
-# apt-get install clang lldb git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev
-```
-
-Installing required packages using pip
-
-```
-# pip install conan
-```
-
 ### Debian 8
+Adding Clang 3.9 repos
+
+Create a file named */etc/apt/sources.list.d/llvm-jessie.list*
+```
+deb http://apt.llvm.org/jessie/ llvm-toolchain-jessie-3.9 main
+deb-src http://apt.llvm.org/jessie/ llvm-toolchain-jessie-3.9 main
+```
+
 Install required packages using apt-get
 
 ```
-# apt-get install clang lldb git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+apt-get update
+apt-get install clang-3.9 lldb-3.9 git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
 ```
 
 Installing required packages using pip
@@ -42,24 +37,6 @@ Installing required packages using pip
 conan search PACKAGE_NAME -r conan.io 
 ```
 ### C++ vpnServerManager
-
-#### Ubuntu 16.04
-
-Using conan we need to specify which compiler is going to be used its version, also we need to specify that we are going tu use  **libstdc++11** as linker.
-```
-$ cd {{PROJECT_ROOT}}/scripts/vpnServerManager/
-$ git checkout {{CURRENT_BRANCH}}
-$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11 .
-$ conan install -s compiler=gcc -s compiler.version=5.4 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost googlemock googletest  .
-```
-
-
-Using Clang
-```
-$ export CC=/usr/bin/clang
-$ export CXX=/usr/bin/clang++
-$ conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost googlemock googletest  .
-```
 
 #### Debian 8
 
