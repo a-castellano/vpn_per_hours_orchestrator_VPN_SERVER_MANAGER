@@ -8,7 +8,17 @@ The backend manages HourlyVPN WebApp requests for managing VPN Servers such as c
 ## Install project dependencies
 
 ### Debian 8
-Adding Clang 3.9 repos
+
+#### Adding Debian testing repo
+
+Create a file named */etc/apt/sources.list.d/testing.list*
+```
+deb http://ftp.us.debian.org/debian testing main contrib non-free
+```
+
+
+
+#### Adding Clang 3.9 repos
 
 Create a file named */etc/apt/sources.list.d/llvm-jessie.list*
 ```
@@ -20,7 +30,7 @@ Install required packages using apt-get
 
 ```
 apt-get update
-apt-get install clang-3.9 lldb-3.9 git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+apt-get install gcc-6 clang-3.9 lldb-3.9 git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
 ```
 
 Installing required packages using pip
