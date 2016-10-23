@@ -47,7 +47,7 @@ sudo ln -s /usr/bin/clang-3.8 /usr/bin/clang
 sudo ln -s /usr/bin/clang++-3.8 /usr/bin/clang++
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
-conan install -s compiler=clang -s compiler.version=3.5 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost googlemock googletest  .
+conan install -s compiler=clang -s compiler.version=3.8 -s compiler.libcxx=libstdc++11  --build bzip2 electric-fence zlib OpenSSL libcurl Boost googlemock googletest  .
 ```
 
 ### Build
