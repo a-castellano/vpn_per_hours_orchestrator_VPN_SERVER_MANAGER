@@ -30,7 +30,7 @@ Install required packages using apt-get
 
 ```
 apt-get update
-apt-get install gcc-6 clang-3.9 lldb-3.9 git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7 libmysqlcppconn-dev libssh-4 libssh-dev
+apt-get install gcc-6 clang-3.8 lldb-3.8 git make cmake ansible python-pip curl libssh2-1 libssh2-1-dev libmysqlcppconn7v5 libmysqlcppconn-dev libssh-4 libssh-dev
 ```
 
 Installing required packages using pip
